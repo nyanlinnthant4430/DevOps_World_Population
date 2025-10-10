@@ -1,4 +1,9 @@
 FROM openjdk:19
-COPY ./target/classes/com /tmp/com
+
+
+# Copy the fat JAR (includes all dependencies)
+COPY ./target/DevOps_World_Population-0.1.0.2-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "com.napier.devops.App"]
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "DevOps_World_Population-0.1.0.2-jar-with-dependencies.jar"]
