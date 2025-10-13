@@ -1,4 +1,4 @@
-package com.napier.sem.country_report;
+package com.napier.devops;
 /**
  * This class stores country data retrieved from the database.
  */
