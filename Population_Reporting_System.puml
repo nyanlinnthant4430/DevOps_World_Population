@@ -1,0 +1,29 @@
+@startuml
+actor Analyst as "Data Analyst"
+actor Planner as "City Planner"
+actor Official as "Government Official"
+actor Researcher as "Population Researcher"
+actor Linguist as "Linguist"
+
+rectangle Database
+rectangle "Population Reporting System" {
+
+  usecase UC1 as "Generate Country Reports"
+  usecase UC2 as "Generate City Reports"
+  usecase UC3 as "Generate Capital City Reports"
+  usecase UC4 as "Generate Population Reports"
+  usecase UC5 as "Generate Language Reports"
+
+  UC1 ..> Database : uses
+  UC2 ..> Database : uses
+  UC3 ..> Database : uses
+  UC4 ..> Database : uses
+  UC5 ..> Database : uses
+}
+
+Analyst - UC1
+Planner - UC2
+Official - UC3
+Researcher - UC4
+Linguist - UC5
+@enduml
