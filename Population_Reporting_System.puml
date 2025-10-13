@@ -1,29 +1,57 @@
 @startuml
-actor Analyst as "Data Analyst"
-actor Planner as "City Planner"
-actor Official as "Government Official"
-actor Researcher as "Population Researcher"
-actor Linguist as "Linguist"
+title Population Reporting System
 
-rectangle Database
-rectangle "Population Reporting System" {
+' 🔹 Make it top to bottom (vertical)
+top to bottom direction
 
-  usecase UC1 as "Generate Country Reports"
-  usecase UC2 as "Generate City Reports"
-  usecase UC3 as "Generate Capital City Reports"
-  usecase UC4 as "Generate Population Reports"
-  usecase UC5 as "Generate Language Reports"
+' 🔹 Use stickman actor style
+skinparam actorStyle stickman
 
-  UC1 ..> Database : uses
-  UC2 ..> Database : uses
-  UC3 ..> Database : uses
-  UC4 ..> Database : uses
-  UC5 ..> Database : uses
+' 🔹 Style for clarity
+skinparam usecase {
+  BackgroundColor #E8F0FE
+  BorderColor #3367D6
+  ArrowColor #3367D6
+  FontSize 14
 }
 
-Analyst - UC1
-Planner - UC2
-Official - UC3
-Researcher - UC4
-Linguist - UC5
+' 🔹 Define actors
+actor "Data Analyst" as Analyst
+actor "City Planner" as Planner
+actor "Government Official" as Official
+actor "Population Researcher" as Researcher
+actor "Linguist" as Linguist
+actor "Project Owner" as Owner
+
+' 🔹 System boundary
+rectangle "Population Reporting System" {
+  usecase UC1 as "View Country Reports"
+  usecase UC2 as "View City Reports"
+  usecase UC3 as "View Capital City Reports"
+  usecase UC4 as "View Population Reports"
+  usecase UC5 as "View Language Reports"
+  usecase UC6 as "Access World Database"
+}
+
+' 🔹 Vertical, clean connections
+Analyst --> UC1
+Planner --> UC2
+Official --> UC3
+Researcher --> UC4
+Linguist --> UC5
+
+' 🔹 Owner connected clearly to all main reports
+Owner --> UC1
+Owner --> UC2
+Owner --> UC3
+Owner --> UC4
+Owner --> UC5
+
+' 🔹 Use-case relationships
+UC1 ..> UC6 : <<uses>>
+UC2 ..> UC6 : <<uses>>
+UC3 ..> UC6 : <<uses>>
+UC4 ..> UC6 : <<uses>>
+UC5 ..> UC6 : <<uses>>
+
 @enduml
