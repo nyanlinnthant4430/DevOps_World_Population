@@ -1,0 +1,21 @@
+name: A workflow for World Population
+on: push
+
+jobs:
+  build:
+    name: Hello world action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up JDK 19
+        uses: actions/setup-java@v4
+        with:
+          java-version: '19'
+          distribution: 'adopt'
+      - name: Build with Maven
+        run: mvn package
+      - name: Run docker compose
+        run: docker compose up --abort-on-container-exit
