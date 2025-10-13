@@ -60,15 +60,19 @@ public class App {
 
     public static void main(String[] args) {
         App app = new App();
-
-        // Connect to the database (waits until DB is ready)
         app.connect();
 
-        // Show the main menu
-        Menu menu = new Menu();
-        menu.show(app.con);
+        // Detect if running inside Docker (no interactive input)
+        if (System.console() == null) {
+            System.out.println("🧪 Running in non-interactive mode (e.g., CI/CD).");
+            // run a sample report automatically
+            ReportAllCapitalCitiesByPopulation.generateReport(app.con);
+        } else {
+            Menu menu = new Menu();
+            menu.show(app.con);
+        }
 
-        // Disconnect from database before exit
         app.disconnect();
     }
+
 }
