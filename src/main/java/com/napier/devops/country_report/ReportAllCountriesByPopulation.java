@@ -18,7 +18,7 @@ public class ReportAllCountriesByPopulation {
      *
      * @param con the database connection to use for querying data
      */
-    public void generateReport(Connection con) {
+    public static void generateReport(Connection con) {
         try {
             // Create a statement object for executing SQL queries
             Statement stmt = con.createStatement();
