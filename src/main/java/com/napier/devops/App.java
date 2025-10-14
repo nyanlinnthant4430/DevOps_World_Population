@@ -1,62 +1,68 @@
 package com.napier.devops;
 
-import java.sql.*;
+import com.napier.devops.city_report.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
-public class App
-{
-    public static void main(String[] args)
-    {
-        try
-        {
-            // Load Database driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
+public class App {
+
+    public Connection con = null;
+
+    /**
+     * Connect to MySQL database with retry logic.
+     */
+    public void connect() {
+        int retries = 10;
+        while (retries > 0) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection(
+                        "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                        "root",
+                        "example"
+                );
+                System.out.println("Connected to database successfully!");
+                break;
+            } catch (Exception e) {
+                System.out.println("Waiting for database to be ready... (" + retries + " retries left)");
+                retries--;
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ignored) {}
+            }
         }
-        catch (ClassNotFoundException e)
-        {
-            System.out.println("Could not load SQL driver");
+        if (con == null) {
+            System.out.println("Failed to connect to database after multiple attempts.");
             System.exit(-1);
         }
+    }
 
-        // Connection to the database
-        Connection con = null;
-        int retries = 100;
-        for (int i = 0; i < retries; ++i)
-        {
-            System.out.println("Connecting to database...");
-            try
-            {
-                // Wait a bit for db to start
-                Thread.sleep(30000);
-                // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
-                System.out.println("Successfully connected");
-                // Wait a bit
-                Thread.sleep(10000);
-                // Exit for loop
-                break;
-            }
-            catch (SQLException sqle)
-            {
-                System.out.println("Failed to connect to database attempt " + Integer.toString(i));
-                System.out.println(sqle.getMessage());
-            }
-            catch (InterruptedException ie)
-            {
-                System.out.println("Thread interrupted? Should not happen.");
-            }
-        }
-
-        if (con != null)
-        {
-            try
-            {
-                // Close connection
+    /**
+     * Disconnect from MySQL database
+     */
+    public void disconnect() {
+        try {
+            if (con != null) {
                 con.close();
+                System.out.println("Disconnected from database.");
             }
-            catch (Exception e)
-            {
-                System.out.println("Error closing connection to database");
-            }
+        } catch (Exception e) {
+            System.out.println("Error closing connection: " + e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        App app = new App();
+        app.connect();
+
+        // Detect if running inside Docker (non-interactive)
+        if (System.console() == null) {
+            System.out.println("Running in non-interactive (Docker) mode...");
+            ReportAllCitiesByPopulation.generateReport(app.con);
+        } else {
+            Menu.showMenu(app.con);
+        }
+
+        app.disconnect();
     }
 }
