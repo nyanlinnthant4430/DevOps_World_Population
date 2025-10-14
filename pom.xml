@@ -13,20 +13,20 @@
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.32</version>
         </dependency>
+
         <dependency>
             <groupId>de.vandermeer</groupId>
             <artifactId>asciitable</artifactId>
             <version>0.3.2</version>
         </dependency>
-
     </dependencies>
+
 
     <build>
         <plugins>
@@ -57,4 +57,3 @@
         </plugins>
     </build>
 </project>
-

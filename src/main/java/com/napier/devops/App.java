@@ -1,45 +1,38 @@
 package com.napier.devops;
 
-import com.napier.devops.country_report.*;
+import com.napier.devops.city_report.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class App {
 
-    private Connection con = null;
+    public Connection con = null;
 
     /**
      * Connect to MySQL database with retry logic.
      */
     public void connect() {
-        int retries = 10; // number of retries
+        int retries = 10;
         while (retries > 0) {
             try {
-                // Load MySQL JDBC driver
                 Class.forName("com.mysql.cj.jdbc.Driver");
-
-                // Establish connection
                 con = DriverManager.getConnection(
                         "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                         "root",
                         "example"
                 );
-
-                System.out.println("✅ Connected to database successfully!");
-                break; // stop retrying when connection succeeds
-
+                System.out.println("Connected to database successfully!");
+                break;
             } catch (Exception e) {
-                System.out.println("⚠️ Waiting for database to be ready... (" + retries + " retries left)");
+                System.out.println("Waiting for database to be ready... (" + retries + " retries left)");
                 retries--;
                 try {
-                    Thread.sleep(5000); // wait 5 seconds before next try
+                    Thread.sleep(5000);
                 } catch (InterruptedException ignored) {}
             }
         }
-
-        // if connection still fails
         if (con == null) {
-            System.out.println("❌ Failed to connect to database after multiple attempts.");
+            System.out.println("Failed to connect to database after multiple attempts.");
             System.exit(-1);
         }
     }
@@ -51,10 +44,10 @@ public class App {
         try {
             if (con != null) {
                 con.close();
-                System.out.println("🔌 Disconnected from database.");
+                System.out.println("Disconnected from database.");
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Error closing connection: " + e.getMessage());
+            System.out.println("Error closing connection: " + e.getMessage());
         }
     }
 
@@ -62,17 +55,12 @@ public class App {
         App app = new App();
         app.connect();
 
-        // Detect if running inside Docker (no interactive input)
+        // Detect if running inside Docker (non-interactive)
         if (System.console() == null) {
-            System.out.println("Running in non-interactive mode (e.g., CI/CD).");
-
-            // Run all country reports automatically
-            ReportAllCountriesByPopulation.generateReport(app.con);
-
+            System.out.println("Running in non-interactive (Docker) mode...");
+            ReportAllCitiesByPopulation.generateReport(app.con);
         } else {
-            // Interactive mode (when running locally)
-            Menu menu = new Menu();
-            menu.showMenu(app.con);
+            Menu.showMenu(app.con);
         }
 
         app.disconnect();

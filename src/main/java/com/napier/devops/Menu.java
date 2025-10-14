@@ -2,7 +2,7 @@ package com.napier.devops;
 
 import java.sql.Connection;
 import java.util.Scanner;
-import com.napier.devops.country_report.*;
+import com.napier.devops.city_report.*;
 
 public class Menu {
     public static void showMenu(Connection con) {
@@ -10,65 +10,80 @@ public class Menu {
         int choice;
 
         do {
-            System.out.println("\n=== Population Report Menu ===");
-            System.out.println("1. All countries in the world by population (largest to smallest)");
-            System.out.println("2. All countries in a continent by population");
-            System.out.println("3. All countries in a region by population");
-            System.out.println("4. Top N populated countries in the world");
-            System.out.println("5. Top N populated countries in a continent");
-            System.out.println("6. Top N populated countries in a region");
+            System.out.println("\n=== City Population Reports ===");
+            System.out.println("1. All cities in the world by population");
+            System.out.println("2. All cities in a continent by population");
+            System.out.println("3. All cities in a region by population");
+            System.out.println("4. All cities in a country by population");
+            System.out.println("5. All cities in a district by population");
+            System.out.println("6. Top N populated cities in the world");
+            System.out.println("7. Top N populated cities in a continent");
+            System.out.println("8. Top N populated cities in a region");
+            System.out.println("9. Top N populated cities in a country");
+            System.out.println("10. Top N populated cities in a district");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
 
             switch (choice) {
-                case 1:
-                    new ReportAllCountriesByPopulation().generateReport(con);
-                    break;
-
-                case 2:
+                case 1 -> ReportAllCitiesByPopulation.generateReport(con);
+                case 2 -> {
                     System.out.print("Enter Continent Name: ");
                     String continent = scanner.nextLine();
-                    new ReportCountriesByContinent().generateReport(con, continent);
-                    break;
-
-                case 3:
+                    ReportCitiesByContinent.generateReport(con, continent);
+                }
+                case 3 -> {
                     System.out.print("Enter Region Name: ");
                     String region = scanner.nextLine();
-                    new ReportCountriesByRegion().generateReport(con, region);
-                    break;
-
-                case 4:
-                    System.out.print("Enter N (number of top countries): ");
-                    int nWorld = scanner.nextInt();
-                    new ReportTopNCountriesWorld().generateReport(con, nWorld);
-                    break;
-
-                case 5:
+                    ReportCitiesByRegion.generateReport(con, region);
+                }
+                case 4 -> {
+                    System.out.print("Enter Country Name: ");
+                    String country = scanner.nextLine();
+                    ReportCitiesByCountry.generateReport(con, country);
+                }
+                case 5 -> {
+                    System.out.print("Enter District Name: ");
+                    String district = scanner.nextLine();
+                    ReportCitiesByDistrict.generateReport(con, district);
+                }
+                case 6 -> {
+                    System.out.print("Enter N: ");
+                    int n = scanner.nextInt();
+                    ReportTopNCitiesWorld.generateReport(con, n);
+                }
+                case 7 -> {
                     System.out.print("Enter Continent Name: ");
-                    String continentTop = scanner.nextLine();
-                    System.out.print("Enter N (number of top countries): ");
-                    int nContinent = scanner.nextInt();
-                    new ReportTopNCountriesContinent().generateReport(con, continentTop, nContinent);
-                    break;
-
-                case 6:
+                    String continent = scanner.nextLine();
+                    System.out.print("Enter N: ");
+                    int n = scanner.nextInt();
+                    ReportTopNCitiesContinent.generateReport(con, continent, n);
+                }
+                case 8 -> {
                     System.out.print("Enter Region Name: ");
-                    String regionTop = scanner.nextLine();
-                    System.out.print("Enter N (number of top countries): ");
-                    int nRegion = scanner.nextInt();
-                    new ReportTopNCountriesRegion().generateReport(con, regionTop, nRegion);
-                    break;
-
-                case 0:
-                    System.out.println("Exiting...");
-                    break;
-
-                default:
-                    System.out.println("Invalid choice! Try again.");
+                    String region = scanner.nextLine();
+                    System.out.print("Enter N: ");
+                    int n = scanner.nextInt();
+                    ReportTopNCitiesRegion.generateReport(con, region, n);
+                }
+                case 9 -> {
+                    System.out.print("Enter Country Name: ");
+                    String country = scanner.nextLine();
+                    System.out.print("Enter N: ");
+                    int n = scanner.nextInt();
+                    ReportTopNCitiesCountry.generateReport(con, country, n);
+                }
+                case 10 -> {
+                    System.out.print("Enter District Name: ");
+                    String district = scanner.nextLine();
+                    System.out.print("Enter N: ");
+                    int n = scanner.nextInt();
+                    ReportTopNCitiesDistrict.generateReport(con, district, n);
+                }
+                case 0 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice! Try again.");
             }
-
         } while (choice != 0);
 
         scanner.close();
