@@ -25,11 +25,11 @@ public class App {
                         "example"
                 );
 
-                System.out.println("✅ Connected to database successfully!");
+                System.out.println(" Connected to database successfully!");
                 break; // stop retrying when connection succeeds
 
             } catch (Exception e) {
-                System.out.println("⚠️ Waiting for database to be ready... (" + retries + " retries left)");
+                System.out.println(" Waiting for database to be ready... (" + retries + " retries left)");
                 retries--;
                 try {
                     Thread.sleep(5000); // wait 5 seconds before next try
@@ -39,7 +39,7 @@ public class App {
 
         // if connection still fails
         if (con == null) {
-            System.out.println("❌ Failed to connect to database after multiple attempts.");
+            System.out.println(" Failed to connect to database after multiple attempts.");
             System.exit(-1);
         }
     }
