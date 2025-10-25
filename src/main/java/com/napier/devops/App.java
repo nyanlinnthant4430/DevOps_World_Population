@@ -1,6 +1,5 @@
 package com.napier.devops;
 
-import com.napier.devops.city_report.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -25,11 +24,11 @@ public class App {
                         "example"
                 );
 
-                System.out.println("✅ Connected to database successfully!");
+                System.out.println("Connected to database successfully!");
                 break; // stop retrying when connection succeeds
 
             } catch (Exception e) {
-                System.out.println("⚠️ Waiting for database to be ready... (" + retries + " retries left)");
+                System.out.println("Waiting for database to be ready... (" + retries + " retries left)");
                 retries--;
                 try {
                     Thread.sleep(5000); // wait 5 seconds before next try
@@ -39,7 +38,7 @@ public class App {
 
         // if connection still fails
         if (con == null) {
-            System.out.println("❌ Failed to connect to database after multiple attempts.");
+            System.out.println("Failed to connect to database after multiple attempts.");
             System.exit(-1);
         }
     }
@@ -51,10 +50,10 @@ public class App {
         try {
             if (con != null) {
                 con.close();
-                System.out.println("🔌 Disconnected from database.");
+                System.out.println("Disconnected from database.");
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Error closing connection: " + e.getMessage());
+            System.out.println("Error closing connection: " + e.getMessage());
         }
     }
 
@@ -64,7 +63,7 @@ public class App {
 
         // Detect if running inside Docker (no interactive input)
         if (System.console() == null) {
-            System.out.println("🧪 Running in non-interactive mode (e.g., CI/CD).");
+            System.out.println("Running in non-interactive mode (e.g., CI/CD).");
             // run a sample report automatically
             ReportAllCapitalCitiesByPopulation.generateReport(app.con);
         } else {

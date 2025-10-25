@@ -1,6 +1,5 @@
 package com.napier.devops;
 
-import com.napier.devops.city_report.*;
 import java.sql.Connection;
 import java.util.Scanner;
 
