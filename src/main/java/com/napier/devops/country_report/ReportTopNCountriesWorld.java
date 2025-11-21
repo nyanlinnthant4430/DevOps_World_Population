@@ -20,7 +20,7 @@ public class ReportTopNCountriesWorld {
      * @param con the database connection to use for querying data
      * @param n the number of top countries to retrieve and display
      */
-    public void generateReport(Connection con, int n) {
+    public static void generateReport(Connection con, int n) {
         try {
             // Create a prepared statement to retrieve top N countries and prevent SQL injection
             PreparedStatement pstmt = con.prepareStatement(

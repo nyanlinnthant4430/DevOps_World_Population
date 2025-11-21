@@ -19,7 +19,7 @@ public class ReportCountriesByRegion {
      * @param con the database connection to use for querying data
      * @param region the name of the region to filter countries by
      */
-    public void generateReport(Connection con, String region) {
+    public static void generateReport(Connection con, String region) {
         try {
             // Create a prepared statement to prevent SQL injection and filter by region
             PreparedStatement pstmt = con.prepareStatement(
