@@ -24,4 +24,5 @@ public class CityTest
         assertEquals("Southeast Asia", city.getRegion());
         assertEquals(7360703, city.getPopulation());
     }
+    
 }
