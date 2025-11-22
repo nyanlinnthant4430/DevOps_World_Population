@@ -1,25 +1,24 @@
-package com.napier.devops.city_report;
-
-import de.vandermeer.asciitable.AsciiTable;
+package com.napier.devops.FeatureCity_report;
 
 import java.sql.*;
 import java.util.LinkedList;
+import de.vandermeer.asciitable.AsciiTable;
 
-public class ReportCitiesByRegion {
-    public static void generateReport(Connection con, String region) {
+public class FeatureReportCitiesByContinent {
+    public static void generateReport(Connection con, String continent) {
         try {
             PreparedStatement pstmt = con.prepareStatement(
                     "SELECT city.ID, city.Name, country.Name AS Country, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
-                            "WHERE country.Region = ? " +
+                            "WHERE country.Continent = ? " +
                             "ORDER BY city.Population DESC;"
             );
-            pstmt.setString(1, region);
+            pstmt.setString(1, continent);
             ResultSet rset = pstmt.executeQuery();
 
-            LinkedList<City> cities = new LinkedList<>();
+            LinkedList<FeatureCity> cities = new LinkedList<>();
             while (rset.next()) {
-                City c = new City();
+                FeatureCity c = new FeatureCity();
                 c.id = rset.getInt("ID");
                 c.name = rset.getString("Name");
                 c.country = rset.getString("Country");
@@ -34,17 +33,18 @@ public class ReportCitiesByRegion {
         }
     }
 
-    private static void printCities(LinkedList<City> cities) {
+    private static void printCities(LinkedList<FeatureCity> cities) {
         AsciiTable table = new AsciiTable();
         table.addRule();
         table.addRow("ID", "City", "Country", "District", "Population");
         table.addRule();
 
-        for (City c : cities) {
+        for (FeatureCity c : cities) {
             table.addRow(c.id, c.name, c.country, c.district, c.population);
             table.addRule();
         }
 
         System.out.println(table.render());
     }
+
 }

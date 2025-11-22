@@ -2,11 +2,11 @@ package com.napier.devops;
 
 import com.napier.devops.country_report.*;
 import com.napier.devops.city_report.*;
+import com.napier.devops.FeatureCity_report.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
@@ -15,49 +15,44 @@ public class App {
 
     /**
      * Connect to MySQL database with retry logic.
+     * Works for local IntelliJ or Docker/CI.
      */
     public void connect(String location, int delay) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Could not load SQL driver");
-            System.exit(-1);
-        }
-
         int retries = 10;
-
-        for (int i = 0; i < retries; i++) {
-            System.out.println("Connecting to database... attempt " + (i + 1));
-
+        while (retries > 0) {
             try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
                 Thread.sleep(delay);
-
                 con = DriverManager.getConnection(
-                        "jdbc:mysql://" + location +
-                                "/world?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC",
+                        "jdbc:mysql://" + location + "/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                         "root",
                         "example"
                 );
-
-                System.out.println("Successfully connected");
+                System.out.println("Connected to database successfully at: " + location);
                 break;
-
-            } catch (SQLException sqle) {
-                System.out.println("Failed attempt " + (i + 1) + ": " + sqle.getMessage());
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                System.out.println("Waiting for database... (" + retries + " retries left)");
+                retries--;
+                try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
             }
         }
-
         if (con == null) {
-            System.out.println("FATAL ERROR: Could not connect after " + retries + " attempts");
+            System.out.println("FATAL ERROR: Cannot connect to MySQL at " + location);
             System.exit(-1);
         }
     }
 
-    /**
-     * Disconnect
-     */
+    /** Convenience for local IntelliJ run */
+    public void connect() {
+        connect("localhost:33060", 0);
+    }
+
+    /** Get connection */
+    public Connection getConnection() {
+        return con;
+    }
+
+    /** Disconnect safely */
     public void disconnect() {
         try {
             if (con != null) {
@@ -69,138 +64,109 @@ public class App {
         }
     }
 
-    // COUNTRY PRINT
-    public static void printCountries(ArrayList<Country> countries) {
-        if (countries == null) {
-            System.out.println("No countries");
+    /** Country printing helper */
+    public static void printCountries(java.util.ArrayList<Country> countries) {
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No countries to display");
             return;
         }
-
-        System.out.println(String.format(
-                "%-30s %-15s %-25s %-15s",
-                "Country Name", "Continent", "Region", "Population"));
-
+        System.out.printf("%-30s %-15s %-25s %-15s%n", "Country Name", "Continent", "Region", "Population");
         for (Country c : countries) {
             if (c == null) continue;
-            System.out.println(String.format(
-                    "%-30s %-15s %-25s %-15d",
-                    c.getName(), c.getContinent(), c.getRegion(), c.getPopulation()
-            ));
+            System.out.printf("%-30s %-15s %-25s %-15d%n", c.getName(), c.getContinent(), c.getRegion(), c.getPopulation());
         }
     }
 
-    // CITY PRINT
-    public static void printCities(ArrayList<City> cities) {
-        if (cities == null) {
-            System.out.println("No cities");
+    /** City printing helper */
+    public static void printCities(java.util.ArrayList<City> cities) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities to display");
             return;
         }
-
-        System.out.println(String.format(
-                "%-30s %-25s %-20s %-15s",
-                "City Name", "Country", "District", "Population"));
-
+        System.out.printf("%-30s %-25s %-20s %-15s%n", "City Name", "Country", "District", "Population");
         for (City c : cities) {
             if (c == null) continue;
-            System.out.println(String.format(
-                    "%-30s %-25s %-20s %-15d",
-                    c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation()
-            ));
+            System.out.printf("%-30s %-25s %-20s %-15d%n", c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation());
         }
     }
 
-    public Connection getConnection() {
-        return con;
+    /** FeatureCity printing helper */
+    public static void printFeatureCities(java.util.ArrayList<City> cities) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No FeatureCities to display");
+            return;
+        }
+        System.out.printf("%-30s %-25s %-20s %-15s%n", "City Name", "Country", "District", "Population");
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-30s %-25s %-20s %-15d%n", c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation());
+        }
     }
 
     public static void main(String[] args) {
         App app = new App();
 
-        // Local run
+        // Determine connection mode
         if (args.length < 2) {
-            app.connect("localhost:33060", 0);
-        }
-        else {
-            app.connect(args[0], Integer.parseInt(args[1]));
+            app.connect(); // localhost:33060
+        } else {
+            String host = args[0];
+            int delay = Integer.parseInt(args[1]);
+            app.connect(host, delay);
         }
 
-        // Non-interactive (Docker/CI)
         boolean nonInteractive = (System.console() == null && args.length >= 2);
 
+        // Default values
         String continent = "Asia";
         String region = "Southeast Asia";
+        int nWorld = 10, nContinent = 5, nRegion = 5;
 
-        int nWorld = 10;
-        int nContinent = 5;
-        int nRegion = 5;
-
+        Scanner scanner = null;
         if (!nonInteractive) {
-            Scanner sc = new Scanner(System.in);
-
-            System.out.print("Enter N for Top N countries in WORLD: ");
-            nWorld = sc.nextInt(); sc.nextLine();
-
-            System.out.print("Enter Continent: ");
-            continent = sc.nextLine();
-
-            System.out.print("Enter N for Top N countries in CONTINENT: ");
-            nContinent = sc.nextInt(); sc.nextLine();
-
-            System.out.print("Enter Region: ");
-            region = sc.nextLine();
-
-            System.out.print("Enter N for Top N countries in REGION: ");
-            nRegion = sc.nextInt(); sc.nextLine();
-
-            sc.close();
+            scanner = new Scanner(System.in);
+            System.out.print("Enter N for Top N countries in WORLD: "); nWorld = scanner.nextInt(); scanner.nextLine();
+            System.out.print("Enter Continent: "); continent = scanner.nextLine();
+            System.out.print("Enter N for Top N countries in CONTINENT: "); nContinent = scanner.nextInt(); scanner.nextLine();
+            System.out.print("Enter Region: "); region = scanner.nextLine();
+            System.out.print("Enter N for Top N countries in REGION: "); nRegion = scanner.nextInt(); scanner.nextLine();
         }
 
         // ------------------------------
         // COUNTRY REPORTS
         // ------------------------------
         System.out.println("\n=== COUNTRY REPORTS ===");
-
-        System.out.println("\n1. All countries in the world:");
         ReportAllCountriesByPopulation.generateReport(app.con);
-
-        System.out.println("\n2. All countries in continent '" + continent + "':");
         ReportCountriesByContinent.generateReport(app.con, continent);
-
-        System.out.println("\n3. All countries in region '" + region + "':");
         ReportCountriesByRegion.generateReport(app.con, region);
-
-        System.out.println("\n4. Top " + nWorld + " countries in the world:");
         ReportTopNCountriesWorld.generateReport(app.con, nWorld);
-
-        System.out.println("\n5. Top " + nContinent + " countries in continent '" + continent + "':");
         ReportTopNCountriesContinent.generateReport(app.con, continent, nContinent);
-
-        System.out.println("\n6. Top " + nRegion + " countries in region '" + region + "':");
         ReportTopNCountriesRegion.generateReport(app.con, region, nRegion);
 
         // ------------------------------
         // CITY REPORTS
         // ------------------------------
         System.out.println("\n=== CITY REPORTS ===");
-
-        System.out.println("\n1. All cities in the world:");
         ReportAllCitiesByPopulation.generateReport(app.con);
-
-        System.out.println("\n2. All cities in continent '" + continent + "':");
         ReportCitiesByContinent.generateReport(app.con, continent);
-
-        System.out.println("\n3. All cities in region '" + region + "':");
         ReportCitiesByRegion.generateReport(app.con, region);
-
-        System.out.println("\n4. Top " + nWorld + " cities in the world:");
         ReportTopCitiesWorld.generateReport(app.con, nWorld);
-
-        System.out.println("\n5. Top " + nContinent + " cities in continent '" + continent + "':");
         ReportTopCitiesContinent.generateReport(app.con, continent, nContinent);
-
-        System.out.println("\n6. Top " + nRegion + " cities in region '" + region + "':");
         ReportTopCitiesRegion.generateReport(app.con, region, nRegion);
 
+        // ------------------------------
+        // FEATURECITY REPORTS
+        // ------------------------------
+        System.out.println("\n=== FEATURECITY REPORTS ===");
+        if (!nonInteractive && scanner != null) {
+            System.out.print("\nEnter Country for FEATURECITY report: ");
+            String featureCountry = scanner.nextLine();
+            ReportFeatureCityByCountry.generateReport(app.con, featureCountry);
+        } else {
+            ReportAllFeatureCities.generateReport(app.con); // Docker/CI mode
+        }
+
+        if (scanner != null) scanner.close();
         app.disconnect();
     }
 }
