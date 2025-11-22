@@ -18,8 +18,9 @@ jobs:
           distribution: 'adopt'
 
       - name: Unit Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest,com.napier.devops.CityModelTest test
-
+        run: mvn -B -DfailIfNoTests=false -Dtest=CityAppTest,CityModelTest test
+        #                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        #                two test classes by simple name, comma-separated
 
   IntegrationTests:
     name: Integration Tests
@@ -47,7 +48,9 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTest test
+        run: mvn -B -DfailIfNoTests=false -Dtest=CityAppIntegrationTest test
+        #                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        #                       only integration test class
 
       - name: Cleanup Docker
         run: |
