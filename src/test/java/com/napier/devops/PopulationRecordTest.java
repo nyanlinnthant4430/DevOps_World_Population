@@ -1,5 +1,6 @@
 package com.napier.devops;
 
+import com.napier.devops.feature_policymaker.PopulationRecord;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,5 +1,8 @@
 package com.napier.devops;
 
+import com.napier.devops.feature_policymaker.ReportContinent;
+import com.napier.devops.feature_policymaker.ReportCountry;
+import com.napier.devops.feature_policymaker.ReportRegion;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

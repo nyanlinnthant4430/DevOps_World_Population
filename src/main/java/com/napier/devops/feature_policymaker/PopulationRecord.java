@@ -1,4 +1,4 @@
-package com.napier.devops;
+package com.napier.devops.feature_policymaker;
 
 /**
  * Represents a population record for a geographical entity (continent, region, etc.).

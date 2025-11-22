@@ -1,4 +1,4 @@
-package com.napier.devops;
+package com.napier.devops.feature_policymaker;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
