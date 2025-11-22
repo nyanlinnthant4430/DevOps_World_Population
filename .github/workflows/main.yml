@@ -16,7 +16,7 @@ jobs:
           java-version: '19'
           distribution: 'adopt'
       - name: Unit Tests
-        run: mvn -DfailIfNoTests=false -Dtest=com.napier.devops.AppTest test
+        run: mvn -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest
 
   IntegrationTests:
     name: Integration Tests
@@ -44,7 +44,7 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -Dtest=com.napier.devops.AppIntegrationTest test
+        run: mvn -Dtest=com.napier.devops.CityAppIntegrationTest
 
       - name: Cleanup Docker
         run: |
