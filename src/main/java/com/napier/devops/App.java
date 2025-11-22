@@ -3,10 +3,10 @@ package com.napier.devops;
 import com.napier.devops.country_report.*;
 import com.napier.devops.city_report.*;
 import com.napier.devops.FeatureCity_report.*;
+import com.napier.devops.feature_policymaker.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class App {
@@ -19,10 +19,11 @@ public class App {
      */
     public void connect(String location, int delay) {
         int retries = 10;
+
         while (retries > 0) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Thread.sleep(delay);
+                Thread.sleep(delay); // only used in Docker/CI
                 con = DriverManager.getConnection(
                         "jdbc:mysql://" + location + "/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                         "root",
@@ -36,6 +37,7 @@ public class App {
                 try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
             }
         }
+
         if (con == null) {
             System.out.println("FATAL ERROR: Cannot connect to MySQL at " + location);
             System.exit(-1);
@@ -44,12 +46,7 @@ public class App {
 
     /** Convenience for local IntelliJ run */
     public void connect() {
-        connect("localhost:33060", 0);
-    }
-
-    /** Get connection */
-    public Connection getConnection() {
-        return con;
+        connect("localhost:33080", 0);
     }
 
     /** Disconnect safely */
@@ -64,60 +61,63 @@ public class App {
         }
     }
 
-    /** Country printing helper */
-    public static void printCountries(java.util.ArrayList<Country> countries) {
-        if (countries == null || countries.isEmpty()) {
-            System.out.println("No countries to display");
-            return;
-        }
-        System.out.printf("%-30s %-15s %-25s %-15s%n", "Country Name", "Continent", "Region", "Population");
-        for (Country c : countries) {
-            if (c == null) continue;
-            System.out.printf("%-30s %-15s %-25s %-15d%n", c.getName(), c.getContinent(), c.getRegion(), c.getPopulation());
-        }
+    /** Get connection */
+    public Connection getConnection() {
+        return con;
     }
 
-    /** City printing helper */
-    public static void printCities(java.util.ArrayList<City> cities) {
-        if (cities == null || cities.isEmpty()) {
-            System.out.println("No cities to display");
-            return;
-        }
-        System.out.printf("%-30s %-25s %-20s %-15s%n", "City Name", "Country", "District", "Population");
-        for (City c : cities) {
-            if (c == null) continue;
-            System.out.printf("%-30s %-25s %-20s %-15d%n", c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation());
-        }
+    // -----------------------------
+    // COUNTRY/CITY/FEATURECITY REPORTS
+    // -----------------------------
+    public void runCountryCityReports(String continent, String region, int nWorld, int nContinent, int nRegion) {
+        System.out.println("\n=== COUNTRY REPORTS ===");
+        ReportAllCountriesByPopulation.generateReport(con);
+        ReportCountriesByContinent.generateReport(con, continent);
+        ReportCountriesByRegion.generateReport(con, region);
+        ReportTopNCountriesWorld.generateReport(con, nWorld);
+        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
+        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
+
+        System.out.println("\n=== CITY REPORTS ===");
+        ReportAllCitiesByPopulation.generateReport(con);
+        ReportCitiesByContinent.generateReport(con, continent);
+        ReportCitiesByRegion.generateReport(con, region);
+        ReportTopCitiesWorld.generateReport(con, nWorld);
+        ReportTopCitiesContinent.generateReport(con, continent, nContinent);
+        ReportTopCitiesRegion.generateReport(con, region, nRegion);
+
+        System.out.println("\n=== FEATURECITY REPORTS ===");
+        ReportAllFeatureCities.generateReport(con);
     }
 
-    /** FeatureCity printing helper */
-    public static void printFeatureCities(java.util.ArrayList<City> cities) {
-        if (cities == null || cities.isEmpty()) {
-            System.out.println("No FeatureCities to display");
-            return;
-        }
-        System.out.printf("%-30s %-25s %-20s %-15s%n", "City Name", "Country", "District", "Population");
-        for (City c : cities) {
-            if (c == null) continue;
-            System.out.printf("%-30s %-25s %-20s %-15d%n", c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation());
-        }
+    // -----------------------------
+    // FEATURE POLICYMAKER REPORTS
+    // -----------------------------
+    public void runFeaturePolicymakerReports() {
+        System.out.println("\n=== FEATURE POLICYMAKER REPORTS ===");
+        ReportPopulationByContinent.generateReport(con);
+        ReportPopulationByRegion.generateReport(con);
+        ReportPopulationByCountry.generateReport(con);
     }
 
+    // -----------------------------
+    // MAIN
+    // -----------------------------
     public static void main(String[] args) {
         App app = new App();
 
-        // Determine connection mode
+        boolean nonInteractive = (System.console() == null && args.length >= 2);
+
+        // Connect to database
         if (args.length < 2) {
-            app.connect(); // localhost:33060
+            app.connect(); // localhost:33080
         } else {
             String host = args[0];
             int delay = Integer.parseInt(args[1]);
             app.connect(host, delay);
         }
 
-        boolean nonInteractive = (System.console() == null && args.length >= 2);
-
-        // Default values
+        // Default parameters
         String continent = "Asia";
         String region = "Southeast Asia";
         int nWorld = 10, nContinent = 5, nRegion = 5;
@@ -132,41 +132,15 @@ public class App {
             System.out.print("Enter N for Top N countries in REGION: "); nRegion = scanner.nextInt(); scanner.nextLine();
         }
 
-        // ------------------------------
-        // COUNTRY REPORTS
-        // ------------------------------
-        System.out.println("\n=== COUNTRY REPORTS ===");
-        ReportAllCountriesByPopulation.generateReport(app.con);
-        ReportCountriesByContinent.generateReport(app.con, continent);
-        ReportCountriesByRegion.generateReport(app.con, region);
-        ReportTopNCountriesWorld.generateReport(app.con, nWorld);
-        ReportTopNCountriesContinent.generateReport(app.con, continent, nContinent);
-        ReportTopNCountriesRegion.generateReport(app.con, region, nRegion);
-
-        // ------------------------------
-        // CITY REPORTS
-        // ------------------------------
-        System.out.println("\n=== CITY REPORTS ===");
-        ReportAllCitiesByPopulation.generateReport(app.con);
-        ReportCitiesByContinent.generateReport(app.con, continent);
-        ReportCitiesByRegion.generateReport(app.con, region);
-        ReportTopCitiesWorld.generateReport(app.con, nWorld);
-        ReportTopCitiesContinent.generateReport(app.con, continent, nContinent);
-        ReportTopCitiesRegion.generateReport(app.con, region, nRegion);
-
-        // ------------------------------
-        // FEATURECITY REPORTS
-        // ------------------------------
-        System.out.println("\n=== FEATURECITY REPORTS ===");
-        if (!nonInteractive && scanner != null) {
-            System.out.print("\nEnter Country for FEATURECITY report: ");
-            String featureCountry = scanner.nextLine();
-            ReportFeatureCityByCountry.generateReport(app.con, featureCountry);
-        } else {
-            ReportAllFeatureCities.generateReport(app.con); // Docker/CI mode
+        // Run reports
+        try {
+            app.runCountryCityReports(continent, region, nWorld, nContinent, nRegion);
+            app.runFeaturePolicymakerReports();
+        } catch (Exception e) {
+            System.out.println("Error running reports: " + e.getMessage());
+        } finally {
+            if (scanner != null) scanner.close();
+            app.disconnect();
         }
-
-        if (scanner != null) scanner.close();
-        app.disconnect();
     }
 }
