@@ -21,7 +21,7 @@ public class ReportTopNCountriesRegion {
      * @param region the name of the region to filter countries by
      * @param n the number of top countries to retrieve and display
      */
-    public void generateReport(Connection con, String region, int n) {
+    public static void generateReport(Connection con, String region, int n) {
         try {
             // Create a prepared statement to prevent SQL injection, filter by region and limit results
             PreparedStatement pstmt = con.prepareStatement(

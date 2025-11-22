@@ -19,7 +19,7 @@ public class ReportCountriesByContinent {
      * @param con the database connection to use for querying data
      * @param continent the name of the continent to filter countries by
      */
-    public void generateReport(Connection con, String continent) {
+    public static void generateReport(Connection con, String continent) {
         try {
             // Create a prepared statement to prevent SQL injection and filter by continent
             PreparedStatement pstmt = con.prepareStatement(
