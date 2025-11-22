@@ -1,22 +1,98 @@
-name: A workflow for World Population
+name: A workflow for my Hello World App
 on: push
 
 jobs:
-  build:
-    name: Hello world action
-    runs-on: ubuntu-latest
+  UnitTests:
+    name: Unit Tests
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Set up JDK 19
+        uses: actions/setup-java@v2
+        with:
+          java-version: '19'
+          distribution: 'adopt'
+
+      - name: Unit Tests
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest test
+        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        #      properties here -------------------------------^        ^ goal
+
+  IntegrationTests:
+    name: Integration Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
       - name: Set up JDK 19
         uses: actions/setup-java@v4
         with:
           java-version: '19'
           distribution: 'adopt'
-      - name: Build with Maven
-        run: mvn package
-      - name: Run docker compose
-        run: docker compose up --abort-on-container-exit
 
+      - name: Start MySQL (World Database)
+        run: |
+          docker build -t worlddb ./db
+          docker run --name world-container -dp 33060:3306 \
+            -e MYSQL_ROOT_PASSWORD=example \
+            -e MYSQL_ROOT_HOST=% \
+            worlddb
+          # Wait for MySQL inside Docker to fully start
+          sleep 25
+
+      - name: Run Integration Tests
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTest test
+        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        # again: properties here -------------------------------------------^        ^ goal
+
+      - name: Cleanup Docker
+        run: |
+          docker stop world-container
+          docker rm world-container
+          docker image rm worlddb
+
+      - name: CodeCov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos too
+          files: ./target/site/jacoco/jacoco.xml
+          flags: Integration Tests # optional
+          verbose: true # optional (default = false)
+          slug: nyanlinnthant4430/DevOps_World_Population
+
+  build:
+    name: Build and Start Using docker-compose
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up JDK 19
+        uses: actions/setup-java@v2
+        with:
+          java-version: '19'
+          distribution: 'adopt'
+
+      - name: Package and Run docker compose
+        run: |
+          mvn -B -DskipTests -DfailIfNoTests=false package
+          docker compose up --abort-on-container-exit
+
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+            ./target/*.jar
