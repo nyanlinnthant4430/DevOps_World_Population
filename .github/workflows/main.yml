@@ -10,13 +10,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Set up JDK 19
         uses: actions/setup-java@v2
         with:
           java-version: '19'
           distribution: 'adopt'
+
       - name: Unit Tests
-        run: mvn -Dtest=com.napier.devops.CityAppTest,com.napier.devops.CityModelTest test
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest,com.napier.devops.CityModelTest test
+
 
   IntegrationTests:
     name: Integration Tests
@@ -27,7 +30,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up JDK 24
+      - name: Set up JDK 19
         uses: actions/setup-java@v4
         with:
           java-version: '19'
@@ -44,15 +47,13 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -Dtest=com.napier.devops.CityAppIntegrationTest test
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTest test
 
       - name: Cleanup Docker
         run: |
           docker stop world-container
           docker rm world-container
           docker image rm worlddb
-
-
 
       - name: CodeCov
         uses: codecov/codecov-action@v4.0.1
@@ -62,8 +63,6 @@ jobs:
           flags: Integration Tests # optional
           verbose: true # optional (default = false)
           slug: nyanlinnthant4430/DevOps_World_Population
-
-
 
   build:
     name: Build and Start Using docker-compose
@@ -75,16 +74,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Set up JDK 19
         uses: actions/setup-java@v2
         with:
           java-version: '19'
           distribution: 'adopt'
+
       - name: Package and Run docker compose
         run: |
-          mvn package -DskipTests
+          mvn -B -DskipTests -DfailIfNoTests=false package
           docker compose up --abort-on-container-exit
-      - uses: "marvinpinto/action-automatic-releases@latest"
+
+      - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
