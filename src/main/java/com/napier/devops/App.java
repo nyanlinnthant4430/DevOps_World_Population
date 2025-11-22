@@ -1,8 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.feature_policymaker.ReportContinent;
-import com.napier.devops.feature_policymaker.ReportCountry;
-import com.napier.devops.feature_policymaker.ReportRegion;
+import com.napier.devops.feature_policymaker.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -95,13 +93,13 @@ public class App {
      */
     private void runAllPopulationReports() {
         System.out.println("\n===== 1. Population of each Continent =====");
-        new ReportContinent().generateReport(con);
+        ReportPopulationByContinent.generateReport(con);
 
         System.out.println("\n===== 2. Population of each Region =====");
-        new ReportRegion().generateReport(con);
+        ReportPopulationByRegion.generateReport(con);
 
         System.out.println("\n===== 3. Population of each Country =====");
-        new ReportCountry().generateReport(con);
+        ReportPopulationByCountry.generateReport(con);
 
         System.out.println("\nAll world population reports have been generated.");
     }

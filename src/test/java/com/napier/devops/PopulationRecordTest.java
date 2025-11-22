@@ -8,11 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the PopulationRecord data model.
  */
-public class PopulationRecordTest
-{
+public class PopulationRecordTest {
     @Test
-    void testConstructorAndGetters()
-    {
+    void testConstructorAndGetters() {
         PopulationRecord record = new PopulationRecord(
                 "Asia",
                 4500000000L,
@@ -27,8 +25,7 @@ public class PopulationRecordTest
     }
 
     @Test
-    void testZeroValues()
-    {
+    void testZeroValues() {
         PopulationRecord record = new PopulationRecord(
                 "EmptyLand",
                 0L,
@@ -43,8 +40,7 @@ public class PopulationRecordTest
     }
 
     @Test
-    void testLargeValues()
-    {
+    void testLargeValues() {
         PopulationRecord record = new PopulationRecord(
                 "BigPlace",
                 Long.MAX_VALUE,

@@ -1,11 +1,7 @@
 package com.napier.devops;
 
-import com.napier.devops.feature_policymaker.ReportContinent;
-import com.napier.devops.feature_policymaker.ReportCountry;
-import com.napier.devops.feature_policymaker.ReportRegion;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import com.napier.devops.feature_policymaker.*;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,84 +9,64 @@ import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Integration tests for the population App.
- * - Connects to the real MySQL database (localhost:33080 / world)
- * - Verifies connection and that core reports run without throwing.
- */
-public class PopulationAppIntegrationTest
-{
+public class PopulationAppIntegrationTest {
+
     static App app;
 
     @BeforeAll
-    static void init()
-    {
+    static void init() {
         app = new App();
-        // Uses App.connect() → jdbc:mysql://localhost:33080/world
-        app.connect();
+        // Localhost MySQL for integration tests
+        app.connect("localhost:33080", 0);
     }
 
     @AfterAll
-    static void teardown()
-    {
+    static void cleanup() {
         app.disconnect();
     }
 
     @Test
-    void testConnectionIsNotNull()
-    {
-        Connection con = app.getConnection();
-        assertNotNull(con, "Database connection should not be null after connect()");
+    void testConnectionNotNull() {
+        assertNotNull(app.getConnection(), "Connection should not be null after connect().");
     }
 
     @Test
-    void testCountryTableHasData() throws Exception
-    {
+    void testCountryTableHasData() throws Exception {
         Connection con = app.getConnection();
-        assertNotNull(con, "Connection should not be null");
-
         Statement stmt = con.createStatement();
         ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM country");
 
-        assertTrue(rset.next(), "ResultSet should have at least one row");
-        int count = rset.getInt(1);
-        assertTrue(count > 0, "country table should contain at least one row");
+        assertTrue(rset.next());
+        assertTrue(rset.getInt(1) > 0, "Country table must contain at least 1 row.");
 
         rset.close();
         stmt.close();
     }
 
-    // Helper to assert that a report runs without throwing an exception
-    private void assertReportRuns(Runnable report)
-    {
-        try
-        {
+    // Helper to check if a report runs successfully
+    private void assertReportRuns(Runnable report) {
+        try {
             report.run();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             fail("Report should not throw an exception: " + e.getMessage());
         }
     }
 
     @Test
-    void testReportContinentRuns()
-    {
+    void testPopulationByContinentReport() {
         assertReportRuns(() ->
-                new ReportContinent().generateReport(app.getConnection()));
+                ReportPopulationByContinent.generateReport(app.getConnection()));
     }
 
     @Test
-    void testReportRegionRuns()
-    {
+    void testPopulationByRegionReport() {
         assertReportRuns(() ->
-                new ReportRegion().generateReport(app.getConnection()));
+                ReportPopulationByRegion.generateReport(app.getConnection()));
     }
 
     @Test
-    void testReportCountryRuns()
-    {
+    void testPopulationByCountryReport() {
         assertReportRuns(() ->
-                new ReportCountry().generateReport(app.getConnection()));
+                ReportPopulationByCountry.generateReport(app.getConnection()));
     }
 }
