@@ -55,60 +55,60 @@ public class FeatureCityAppIntegrationTest {
     @Test
     void testReportAllCitiesByPopulation() {
         assertReportRuns(() ->
-                ReportAllCitiesByPopulation.generateReport(app.getConnection()));
+                FeatureReportAllCitiesByPopulation.generateReport(app.getConnection()));
     }
 
     @Test
     void testReportCitiesByContinent() {
         assertReportRuns(() ->
-                ReportCitiesByContinent.generateReport(app.getConnection(), "Asia"));
+                FeatureReportCitiesByContinent.generateReport(app.getConnection(), "Asia"));
     }
 
     @Test
     void testReportCitiesByRegion() {
         assertReportRuns(() ->
-                ReportCitiesByRegion.generateReport(app.getConnection(), "Southeast Asia"));
+                FeatureReportCitiesByRegion.generateReport(app.getConnection(), "Southeast Asia"));
     }
 
     @Test
     void testReportCitiesByCountry() {
         assertReportRuns(() ->
-                ReportCitiesByCountry.generateReport(app.getConnection(), "Myanmar"));
+                FeatureReportCitiesByCountry.generateReport(app.getConnection(), "Myanmar"));
     }
 
     @Test
     void testReportCitiesByDistrict() {
         assertReportRuns(() ->
-                ReportCitiesByDistrict.generateReport(app.getConnection(), "Yangon"));
+                FeatureReportCitiesByDistrict.generateReport(app.getConnection(), "Yangon"));
     }
 
     @Test
     void testTopNCitiesWorld() {
         assertReportRuns(() ->
-                ReportTopNCitiesWorld.generateReport(app.getConnection(), 5));
+                FeatureReportTopNCitiesWorld.generateReport(app.getConnection(), 5));
     }
 
     @Test
     void testTopNCitiesContinent() {
         assertReportRuns(() ->
-                ReportTopNCitiesContinent.generateReport(app.getConnection(), "Asia", 5));
+                FeatureReportTopNCitiesContinent.generateReport(app.getConnection(), "Asia", 5));
     }
 
     @Test
     void testTopNCitiesRegion() {
         assertReportRuns(() ->
-                ReportTopNCitiesRegion.generateReport(app.getConnection(), "Southeast Asia", 5));
+                FeatureReportTopNCitiesRegion.generateReport(app.getConnection(), "Southeast Asia", 5));
     }
 
     @Test
     void testTopNCitiesCountry() {
         assertReportRuns(() ->
-                ReportTopNCitiesCountry.generateReport(app.getConnection(), "Myanmar", 5));
+                FeatureReportTopNCitiesCountry.generateReport(app.getConnection(), "Myanmar", 5));
     }
 
     @Test
     void testTopNCitiesDistrict() {
         assertReportRuns(() ->
-                ReportTopNCitiesDistrict.generateReport(app.getConnection(), "Yangon", 5));
+                FeatureReportTopNCitiesDistrict.generateReport(app.getConnection(), "Yangon", 5));
     }
 }

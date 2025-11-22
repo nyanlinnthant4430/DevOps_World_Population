@@ -1,6 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.FeatureCity_report.City;
+import com.napier.devops.FeatureCity_report.FeatureCity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +9,7 @@ public class FeatureCityModelTest {
 
     @Test
     void testCityConstructorAndGetters() {
-        City c = new City(
+        FeatureCity c = new FeatureCity(
                 10010,
                 "Yangon",
                 "Myanmar",

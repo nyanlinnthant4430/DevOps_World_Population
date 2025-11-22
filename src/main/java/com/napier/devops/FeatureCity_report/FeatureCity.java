@@ -1,6 +1,6 @@
 package com.napier.devops.FeatureCity_report;
 
-public class City {
+public class FeatureCity {
     public int id;
     public String name;
     public String country;
@@ -10,10 +10,10 @@ public class City {
     public int population;
 
     // No-argument constructor (required for report classes)
-    public City() {}
+    public FeatureCity() {}
 
     // Full constructor (used in model tests)
-    public City(int id, String name, String country, String continent, String region, String district, int population) {
+    public FeatureCity(int id, String name, String country, String continent, String region, String district, int population) {
         this.id = id;
         this.name = name;
         this.country = country;

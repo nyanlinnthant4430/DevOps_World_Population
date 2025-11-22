@@ -74,42 +74,42 @@ public class App {
         if (System.console() == null && args.length >= 2) {
             System.out.println("Running in non-interactive (Docker) mode...");
             System.out.println("\n=== 1. All cities in the WORLD by population ===");
-            ReportAllCitiesByPopulation.generateReport(app.con);
+            FeatureReportAllCitiesByPopulation.generateReport(app.con);
             app.disconnect();
             return;
         }
 // INTERACTIVE (IntelliJ/local)
 // 1️⃣ First report: no scanner, run immediately
         System.out.println("\n=== 1. All cities in the WORLD by population ===");
-        ReportAllCitiesByPopulation.generateReport(app.con);
+        FeatureReportAllCitiesByPopulation.generateReport(app.con);
 // 2️⃣–🔟 Use Scanner for all inputs
         Scanner scanner = new Scanner(System.in);
 // 2. All cities in a continent
         System.out.print("\nEnter Continent Name for ALL cities by population: ");
         String continentAll = scanner.nextLine();
         System.out.println("\n=== 2. All cities in continent '" + continentAll + "' by population ===");
-        ReportCitiesByContinent.generateReport(app.con, continentAll);
+        FeatureReportCitiesByContinent.generateReport(app.con, continentAll);
 // 3. All cities in a region
         System.out.print("\nEnter Region Name for ALL cities by population: ");
         String regionAll = scanner.nextLine();
         System.out.println("\n=== 3. All cities in region '" + regionAll + "' by population ===");
-        ReportCitiesByRegion.generateReport(app.con, regionAll);
+        FeatureReportCitiesByRegion.generateReport(app.con, regionAll);
 // 4. All cities in a country
         System.out.print("\nEnter Country Name for ALL cities by population: ");
         String countryAll = scanner.nextLine();
         System.out.println("\n=== 4. All cities in country '" + countryAll + "' by population ===");
-        ReportCitiesByCountry.generateReport(app.con, countryAll);
+        FeatureReportCitiesByCountry.generateReport(app.con, countryAll);
 // 5. All cities in a district
         System.out.print("\nEnter District Name for ALL cities by population: ");
         String districtAll = scanner.nextLine();
         System.out.println("\n=== 5. All cities in district '" + districtAll + "' by population ===");
-        ReportCitiesByDistrict.generateReport(app.con, districtAll);
+        FeatureReportCitiesByDistrict.generateReport(app.con, districtAll);
 // 6. Top N cities in the world
         System.out.print("\nEnter N for TOP N cities in the WORLD: ");
         int nWorld = scanner.nextInt();
         scanner.nextLine(); // consume newline
         System.out.println("\n=== 6. Top " + nWorld + " cities in the WORLD by population ===");
-        ReportTopNCitiesWorld.generateReport(app.con, nWorld);
+        FeatureReportTopNCitiesWorld.generateReport(app.con, nWorld);
 // 7. Top N cities in a continent
         System.out.print("\nEnter Continent for TOP N cities: ");
         String topContinent = scanner.nextLine();
@@ -117,7 +117,7 @@ public class App {
         int nContinent = scanner.nextInt();
         scanner.nextLine();
         System.out.println("\n=== 7. Top " + nContinent + " cities in continent '" + topContinent + "' ===");
-        ReportTopNCitiesContinent.generateReport(app.con, topContinent, nContinent);
+        FeatureReportTopNCitiesContinent.generateReport(app.con, topContinent, nContinent);
 // 8. Top N cities in a region
         System.out.print("\nEnter Region for TOP N cities: ");
         String topRegion = scanner.nextLine();
@@ -125,7 +125,7 @@ public class App {
         int nRegion = scanner.nextInt();
         scanner.nextLine();
         System.out.println("\n=== 8. Top " + nRegion + " cities in region '" + topRegion + "' ===");
-        ReportTopNCitiesRegion.generateReport(app.con, topRegion, nRegion);
+        FeatureReportTopNCitiesRegion.generateReport(app.con, topRegion, nRegion);
 // 9. Top N cities in a country
         System.out.print("\nEnter Country for TOP N cities: ");
         String topCountry = scanner.nextLine();
@@ -133,7 +133,7 @@ public class App {
         int nCountry = scanner.nextInt();
         scanner.nextLine();
         System.out.println("\n=== 9. Top " + nCountry + " cities in country '" + topCountry + "' ===");
-        ReportTopNCitiesCountry.generateReport(app.con, topCountry, nCountry);
+        FeatureReportTopNCitiesCountry.generateReport(app.con, topCountry, nCountry);
 // 10. Top N cities in a district
         System.out.print("\nEnter District for TOP N cities: ");
         String topDistrict = scanner.nextLine();
@@ -141,7 +141,7 @@ public class App {
         int nDistrict = scanner.nextInt();
         scanner.nextLine();
         System.out.println("\n=== 10. Top " + nDistrict + " cities in district '" + topDistrict + "' ===");
-        ReportTopNCitiesDistrict.generateReport(app.con, topDistrict, nDistrict);
+        FeatureReportTopNCitiesDistrict.generateReport(app.con, topDistrict, nDistrict);
         scanner.close();
         app.disconnect();
     }

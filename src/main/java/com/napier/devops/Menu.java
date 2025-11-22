@@ -27,59 +27,59 @@
                 scanner.nextLine();
 
                 switch (choice) {
-                    case 1 -> ReportAllCitiesByPopulation.generateReport(con);
+                    case 1 -> FeatureReportAllCitiesByPopulation.generateReport(con);
                     case 2 -> {
                         System.out.print("Enter Continent Name: ");
                         String continent = scanner.nextLine();
-                        ReportCitiesByContinent.generateReport(con, continent);
+                        FeatureReportCitiesByContinent.generateReport(con, continent);
                     }
                     case 3 -> {
                         System.out.print("Enter Region Name: ");
                         String region = scanner.nextLine();
-                        ReportCitiesByRegion.generateReport(con, region);
+                        FeatureReportCitiesByRegion.generateReport(con, region);
                     }
                     case 4 -> {
                         System.out.print("Enter Country Name: ");
                         String country = scanner.nextLine();
-                        ReportCitiesByCountry.generateReport(con, country);
+                        FeatureReportCitiesByCountry.generateReport(con, country);
                     }
                     case 5 -> {
                         System.out.print("Enter District Name: ");
                         String district = scanner.nextLine();
-                        ReportCitiesByDistrict.generateReport(con, district);
+                        FeatureReportCitiesByDistrict.generateReport(con, district);
                     }
                     case 6 -> {
                         System.out.print("Enter N: ");
                         int n = scanner.nextInt();
-                        ReportTopNCitiesWorld.generateReport(con, n);
+                        FeatureReportTopNCitiesWorld.generateReport(con, n);
                     }
                     case 7 -> {
                         System.out.print("Enter Continent Name: ");
                         String continent = scanner.nextLine();
                         System.out.print("Enter N: ");
                         int n = scanner.nextInt();
-                        ReportTopNCitiesContinent.generateReport(con, continent, n);
+                        FeatureReportTopNCitiesContinent.generateReport(con, continent, n);
                     }
                     case 8 -> {
                         System.out.print("Enter Region Name: ");
                         String region = scanner.nextLine();
                         System.out.print("Enter N: ");
                         int n = scanner.nextInt();
-                        ReportTopNCitiesRegion.generateReport(con, region, n);
+                        FeatureReportTopNCitiesRegion.generateReport(con, region, n);
                     }
                     case 9 -> {
                         System.out.print("Enter Country Name: ");
                         String country = scanner.nextLine();
                         System.out.print("Enter N: ");
                         int n = scanner.nextInt();
-                        ReportTopNCitiesCountry.generateReport(con, country, n);
+                        FeatureReportTopNCitiesCountry.generateReport(con, country, n);
                     }
                     case 10 -> {
                         System.out.print("Enter District Name: ");
                         String district = scanner.nextLine();
                         System.out.print("Enter N: ");
                         int n = scanner.nextInt();
-                        ReportTopNCitiesDistrict.generateReport(con, district, n);
+                        FeatureReportTopNCitiesDistrict.generateReport(con, district, n);
                     }
                     case 0 -> System.out.println("Exiting...");
                     default -> System.out.println("Invalid choice! Try again.");
