@@ -18,9 +18,8 @@ jobs:
           distribution: 'adopt'
 
       - name: Unit Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest test
-        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        #      properties here -------------------------------^        ^ goal
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppTest,com.napier.devops.CityModelTest test
+
 
   IntegrationTests:
     name: Integration Tests
@@ -49,8 +48,6 @@ jobs:
 
       - name: Run Integration Tests
         run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTest test
-        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        # again: properties here -------------------------------------------^        ^ goal
 
       - name: Cleanup Docker
         run: |
