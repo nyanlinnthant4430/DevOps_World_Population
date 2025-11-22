@@ -2,7 +2,7 @@
 
     import java.sql.Connection;
     import java.util.Scanner;
-    import com.napier.devops.city_report.*;
+    import com.napier.devops.FeatureCity_report.*;
 
     public class Menu {
         public static void showMenu(Connection con) {

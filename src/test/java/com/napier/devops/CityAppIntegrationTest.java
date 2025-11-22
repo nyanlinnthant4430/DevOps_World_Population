@@ -1,6 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.city_report.*;
+import com.napier.devops.FeatureCity_report.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

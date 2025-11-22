@@ -1,5 +1,5 @@
 package com.napier.devops;
-import com.napier.devops.city_report.*;
+import com.napier.devops.FeatureCity_report.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Scanner;

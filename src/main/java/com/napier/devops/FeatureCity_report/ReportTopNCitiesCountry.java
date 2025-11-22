@@ -1,19 +1,21 @@
-package com.napier.devops.city_report;
+package com.napier.devops.FeatureCity_report;
+
+import de.vandermeer.asciitable.AsciiTable;
 
 import java.sql.*;
 import java.util.LinkedList;
-import de.vandermeer.asciitable.AsciiTable;
 
-public class ReportCitiesByContinent {
-    public static void generateReport(Connection con, String continent) {
+public class ReportTopNCitiesCountry {
+    public static void generateReport(Connection con, String country, int n) {
         try {
             PreparedStatement pstmt = con.prepareStatement(
                     "SELECT city.ID, city.Name, country.Name AS Country, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
-                            "WHERE country.Continent = ? " +
-                            "ORDER BY city.Population DESC;"
+                            "WHERE country.Name = ? " +
+                            "ORDER BY city.Population DESC LIMIT ?;"
             );
-            pstmt.setString(1, continent);
+            pstmt.setString(1, country);
+            pstmt.setInt(2, n);
             ResultSet rset = pstmt.executeQuery();
 
             LinkedList<City> cities = new LinkedList<>();
@@ -46,5 +48,4 @@ public class ReportCitiesByContinent {
 
         System.out.println(table.render());
     }
-
 }

@@ -1,18 +1,22 @@
-package com.napier.devops.city_report;
+package com.napier.devops.FeatureCity_report;
+
+import de.vandermeer.asciitable.AsciiTable;
 
 import java.sql.*;
 import java.util.LinkedList;
-import de.vandermeer.asciitable.AsciiTable;
 
-public class ReportAllCitiesByPopulation {
-    public static void generateReport(Connection con) {
+public class ReportTopNCitiesRegion {
+    public static void generateReport(Connection con, String region, int n) {
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rset = stmt.executeQuery(
+            PreparedStatement pstmt = con.prepareStatement(
                     "SELECT city.ID, city.Name, country.Name AS Country, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
-                            "ORDER BY city.Population DESC;"
+                            "WHERE country.Region = ? " +
+                            "ORDER BY city.Population DESC LIMIT ?;"
             );
+            pstmt.setString(1, region);
+            pstmt.setInt(2, n);
+            ResultSet rset = pstmt.executeQuery();
 
             LinkedList<City> cities = new LinkedList<>();
             while (rset.next()) {

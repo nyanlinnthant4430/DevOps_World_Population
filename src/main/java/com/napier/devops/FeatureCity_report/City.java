@@ -1,4 +1,4 @@
-package com.napier.devops.city_report;
+package com.napier.devops.FeatureCity_report;
 
 public class City {
     public int id;
