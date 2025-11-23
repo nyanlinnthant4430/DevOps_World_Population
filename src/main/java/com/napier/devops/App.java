@@ -464,6 +464,7 @@ public class App {
     // Unified connect() using your schema format
     public void connect(String location, int delay) {
         int retries = 10;
+
         while (retries > 0) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -477,6 +478,7 @@ public class App {
 
                 System.out.println("Connected to database: " + location);
                 break;
+
             } catch (Exception e) {
                 System.out.println("Database connection failed. Retries left: " + (retries - 1));
                 retries--;
@@ -485,12 +487,12 @@ public class App {
         }
 
         if (con == null) {
-            System.out.println("FATAL ERROR: Could not connect to DB.");
-            System.exit(-1);
+            throw new RuntimeException("FATAL ERROR: Could not connect to DB at: " + location);
         }
     }
 
-    public void connect() { connect("localhost:33060", 0); }
+
+    public void connect() { connect("localhost:33060", 10000); }
 
     // Disconnect
     public void disconnect() {

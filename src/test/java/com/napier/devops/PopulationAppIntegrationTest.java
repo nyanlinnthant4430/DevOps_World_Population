@@ -17,7 +17,7 @@ public class PopulationAppIntegrationTest {
     static void init() {
         app = new App();
         // Localhost MySQL for integration tests
-        app.connect("localhost:33080", 0);
+        app.connect("localhost:33060", 10000);
     }
 
     @AfterAll

@@ -59,4 +59,9 @@ public class AppTest
         App.printCountries(countries);
     }
 
+    @Test
+    void testDisconnect() {
+        assertDoesNotThrow(() -> app.disconnect());
+    }
+
 }

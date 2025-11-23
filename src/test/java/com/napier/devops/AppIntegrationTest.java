@@ -5,6 +5,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,4 +109,25 @@ public class AppIntegrationTest
         assertReportRuns(() ->
                 ReportTopNCountriesRegion.generateReport(app.getConnection(), "Southeast Asia", 5));
     }
+
+    @Test
+    void testMenuOnlyNavigation() {
+        // Only open menu then exit immediately
+        String fakeInput = "0\n";   // exit the menu
+
+        System.setIn(new ByteArrayInputStream(fakeInput.getBytes()));
+
+        App app = new App();
+        app.connect("localhost:33060", 0);
+
+        assertDoesNotThrow(() -> {
+            Method runMenu = App.class.getDeclaredMethod("runMenu");
+            runMenu.setAccessible(true);
+            runMenu.invoke(app);
+        });
+
+        app.disconnect();
+    }
+
+
 }

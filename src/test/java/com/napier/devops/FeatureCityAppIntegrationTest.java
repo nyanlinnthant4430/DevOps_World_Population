@@ -60,7 +60,7 @@ public class FeatureCityAppIntegrationTest {
 
     @Test
     void testReportCitiesByContinent() {
-        assertReportRuns(() ->
+            assertReportRuns(() ->
                 FeatureReportCitiesByContinent.generateReport(app.getConnection(), "Asia"));
     }
 
@@ -111,4 +111,6 @@ public class FeatureCityAppIntegrationTest {
         assertReportRuns(() ->
                 FeatureReportTopNCitiesDistrict.generateReport(app.getConnection(), "Yangon", 5));
     }
+
+
 }
