@@ -1,4 +1,4 @@
-package com.napier.devops.feature_basicpopulation;
+package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
 
@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class ReportWorldPopulation
+public class BasicReportWorldPopulation
 {
     public static void generateReport(Connection con)
     {

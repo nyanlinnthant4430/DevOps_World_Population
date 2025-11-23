@@ -1,4 +1,4 @@
-package com.napier.devops.feature_basicpopulation;
+package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
 
@@ -13,7 +13,7 @@ import java.sql.Statement;
  * ordered from greatest number to smallest,
  * including the percentage of the world population.
  */
-public class ReportLanguagePopulation
+public class BasicReportLanguagePopulation
 {
     public static void generateReport(Connection con)
     {

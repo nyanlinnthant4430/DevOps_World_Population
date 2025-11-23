@@ -1,6 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.feature_basicpopulation.*;
+import com.napier.devops.basicpopulation.*;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -50,36 +50,36 @@ public class AdditionalAppIntegrationTest {
 
     @Test
     void testReportWorldPopulation() {
-        assertReportRuns(() -> ReportWorldPopulation.generateReport(app.getConnection()));
+        assertReportRuns(() -> BasicReportWorldPopulation.generateReport(app.getConnection()));
     }
 
     @Test
     void testPopulationByContinent() {
-        assertReportRuns(() -> ReportPopulationOfContinent.generateReport(app.getConnection(), "Asia"));
+        assertReportRuns(() -> BasicReportPopulationOfContinent.generateReport(app.getConnection(), "Asia"));
     }
 
     @Test
     void testPopulationByRegion() {
-        assertReportRuns(() -> ReportPopulationOfRegion.generateReport(app.getConnection(), "Southeast Asia"));
+        assertReportRuns(() -> BasicReportPopulationOfRegion.generateReport(app.getConnection(), "Southeast Asia"));
     }
 
     @Test
     void testPopulationByCountry() {
-        assertReportRuns(() -> ReportPopulationOfCountry.generateReport(app.getConnection(), "Myanmar"));
+        assertReportRuns(() -> BasicReportPopulationOfCountry.generateReport(app.getConnection(), "Myanmar"));
     }
 
     @Test
     void testPopulationByDistrict() {
-        assertReportRuns(() -> ReportPopulationOfDistrict.generateReport(app.getConnection(), "Yangon"));
+        assertReportRuns(() -> BasicReportPopulationOfDistrict.generateReport(app.getConnection(), "Yangon"));
     }
 
     @Test
     void testPopulationByCity() {
-        assertReportRuns(() -> ReportPopulationOfCity.generateReport(app.getConnection(), "Rangoon (Yangon)"));
+        assertReportRuns(() -> BasicReportPopulationOfCity.generateReport(app.getConnection(), "Rangoon (Yangon)"));
     }
 
     @Test
     void testPopulationByLanguage() {
-        assertReportRuns(() -> ReportLanguagePopulation.generateReport(app.getConnection()));
+        assertReportRuns(() -> BasicReportLanguagePopulation.generateReport(app.getConnection()));
     }
 }

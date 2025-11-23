@@ -1,6 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.feature_basicpopulation.*;
+import com.napier.devops.basicpopulation.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -159,41 +159,41 @@ public class App
 
         // 1. World population (no input required)
         System.out.println("\n===== 1. Population of the WORLD =====");
-        ReportWorldPopulation.generateReport(con);
+        BasicReportWorldPopulation.generateReport(con);
 
         // 2. Continent population
         System.out.print("\nEnter Continent name: ");
         String continent = scanner.nextLine().trim();
         System.out.println("\n===== 2. Population of continent '" + continent + "' =====");
-        ReportPopulationOfContinent.generateReport(con, continent);
+        BasicReportPopulationOfContinent.generateReport(con, continent);
 
         // 3. Region population
         System.out.print("\nEnter Region name: ");
         String region = scanner.nextLine().trim();
         System.out.println("\n===== 3. Population of region '" + region + "' =====");
-        ReportPopulationOfRegion.generateReport(con, region);
+        BasicReportPopulationOfRegion.generateReport(con, region);
 
         // 4. Country population
         System.out.print("\nEnter Country name: ");
         String country = scanner.nextLine().trim();
         System.out.println("\n===== 4. Population of country '" + country + "' =====");
-        ReportPopulationOfCountry.generateReport(con, country);
+        BasicReportPopulationOfCountry.generateReport(con, country);
 
         // 5. District population
         System.out.print("\nEnter District name: ");
         String district = scanner.nextLine().trim();
         System.out.println("\n===== 5. Population of district '" + district + "' =====");
-        ReportPopulationOfDistrict.generateReport(con, district);
+        BasicReportPopulationOfDistrict.generateReport(con, district);
 
         // 6. City population
         System.out.print("\nEnter City name: ");
         String city = scanner.nextLine().trim();
         System.out.println("\n===== 6. Population of city '" + city + "' =====");
-        ReportPopulationOfCity.generateReport(con, city);
+        BasicReportPopulationOfCity.generateReport(con, city);
 
         // 7. Language populations (fixed set: Chinese, English, Hindi, Spanish, Arabic)
         System.out.println("\n===== 7. Population by Selected Languages =====");
-        ReportLanguagePopulation.generateReport(con);
+        BasicReportLanguagePopulation.generateReport(con);
 
         scanner.close();
     }
@@ -237,10 +237,10 @@ public class App
             {
                 System.out.println("Running in non-interactive mode (Docker/CI)...");
                 System.out.println("\n===== Population of the WORLD =====");
-                ReportWorldPopulation.generateReport(app.getConnection());
+                BasicReportWorldPopulation.generateReport(app.getConnection());
 
                 System.out.println("\n===== Population by Selected Languages =====");
-                ReportLanguagePopulation.generateReport(app.getConnection());
+                BasicReportLanguagePopulation.generateReport(app.getConnection());
             }
             else
             {

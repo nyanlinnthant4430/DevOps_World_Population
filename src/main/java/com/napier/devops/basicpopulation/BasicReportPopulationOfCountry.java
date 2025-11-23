@@ -1,4 +1,4 @@
-package com.napier.devops.feature_basicpopulation;
+package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
 
@@ -6,34 +6,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class ReportPopulationOfDistrict
+public class BasicReportPopulationOfCountry
 {
-    public static void generateReport(Connection con, String district)
+    public static void generateReport(Connection con, String country)
     {
         String sql = """
-                SELECT District, SUM(Population) AS Population
-                FROM city
-                WHERE District = ?
-                GROUP BY District;
+                SELECT Name, Population
+                FROM country
+                WHERE Name = ?;
                 """;
 
         try (PreparedStatement stmt = con.prepareStatement(sql))
         {
-            stmt.setString(1, district);
+            stmt.setString(1, country);
             ResultSet rset = stmt.executeQuery();
 
             AsciiTable table = new AsciiTable();
             table.addRule();
-            table.addRow("District", "Population");
+            table.addRow("Country", "Population");
             table.addRule();
 
             if (rset.next())
             {
-                table.addRow(rset.getString("District"), rset.getLong("Population"));
+                table.addRow(rset.getString("Name"), rset.getLong("Population"));
             }
             else
             {
-                table.addRow(district, "No data");
+                table.addRow(country, "No data");
             }
             table.addRule();
 
@@ -41,7 +40,7 @@ public class ReportPopulationOfDistrict
         }
         catch (Exception e)
         {
-            System.out.println("Error generating district population report: " + e.getMessage());
+            System.out.println("Error generating country population report: " + e.getMessage());
         }
     }
 }

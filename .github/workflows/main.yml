@@ -19,8 +19,7 @@ jobs:
 
       - name: Unit Tests
         run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.AdditionalAppTest test
-        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        #      properties here -------------------------------^        ^ goal
+
 
   IntegrationTests:
     name: Integration Tests
@@ -49,8 +48,6 @@ jobs:
 
       - name: Run Integration Tests
         run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.AdditionalAppIntegrationTest test
-        #                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        # again: properties here -------------------------------------------^        ^ goal
 
       - name: Cleanup Docker
         run: |

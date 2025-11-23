@@ -1,4 +1,4 @@
-package com.napier.devops.feature_basicpopulation;
+package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
 
@@ -6,24 +6,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class ReportPopulationOfCountry
+public class BasicReportPopulationOfCity
 {
-    public static void generateReport(Connection con, String country)
+    public static void generateReport(Connection con, String city)
     {
         String sql = """
                 SELECT Name, Population
-                FROM country
+                FROM city
                 WHERE Name = ?;
                 """;
 
         try (PreparedStatement stmt = con.prepareStatement(sql))
         {
-            stmt.setString(1, country);
+            stmt.setString(1, city);
             ResultSet rset = stmt.executeQuery();
 
             AsciiTable table = new AsciiTable();
             table.addRule();
-            table.addRow("Country", "Population");
+            table.addRow("City", "Population");
             table.addRule();
 
             if (rset.next())
@@ -32,7 +32,7 @@ public class ReportPopulationOfCountry
             }
             else
             {
-                table.addRow(country, "No data");
+                table.addRow(city, "No data");
             }
             table.addRule();
 
@@ -40,7 +40,7 @@ public class ReportPopulationOfCountry
         }
         catch (Exception e)
         {
-            System.out.println("Error generating country population report: " + e.getMessage());
+            System.out.println("Error generating city population report: " + e.getMessage());
         }
     }
 }

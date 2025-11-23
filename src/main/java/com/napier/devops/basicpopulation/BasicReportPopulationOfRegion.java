@@ -1,4 +1,4 @@
-package com.napier.devops.feature_basicpopulation;
+package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
 
@@ -6,35 +6,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class ReportPopulationOfContinent
+public class BasicReportPopulationOfRegion
 {
-    public static void generateReport(Connection con, String continent)
+    public static void generateReport(Connection con, String region)
     {
         String sql = """
-                SELECT Continent, SUM(Population) AS Population
+                SELECT Region, SUM(Population) AS Population
                 FROM country
-                WHERE Continent = ?
-                GROUP BY Continent;
+                WHERE Region = ?
+                GROUP BY Region;
                 """;
 
         try (PreparedStatement stmt = con.prepareStatement(sql))
         {
-            stmt.setString(1, continent);
+            stmt.setString(1, region);
             ResultSet rset = stmt.executeQuery();
 
             AsciiTable table = new AsciiTable();
             table.addRule();
-            table.addRow("Continent", "Population");
+            table.addRow("Region", "Population");
             table.addRule();
 
             if (rset.next())
             {
                 long population = rset.getLong("Population");
-                table.addRow(rset.getString("Continent"), population);
+                table.addRow(rset.getString("Region"), population);
             }
             else
             {
-                table.addRow(continent, "No data");
+                table.addRow(region, "No data");
             }
             table.addRule();
 
@@ -42,7 +42,7 @@ public class ReportPopulationOfContinent
         }
         catch (Exception e)
         {
-            System.out.println("Error generating continent population report: " + e.getMessage());
+            System.out.println("Error generating region population report: " + e.getMessage());
         }
     }
 }
