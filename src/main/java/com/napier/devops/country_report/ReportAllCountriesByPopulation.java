@@ -3,6 +3,7 @@ package com.napier.devops.country_report;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
+
 import java.sql.*;
 import java.util.LinkedList;
 
