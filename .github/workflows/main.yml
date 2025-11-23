@@ -47,7 +47,7 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTests test
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.CityAppIntegrationTest
 
       - name: Cleanup Docker
         run: |
