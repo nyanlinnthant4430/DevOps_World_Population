@@ -1,1 +1,2 @@
-![workflow](https://github.com/<nyanlinnthant4430>/<DevOps_World_Population>/actions/workflows/main.yml/badge.svg)
+# DevOPs_BSc_World_Population
+[![codecov](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/branch/featuretest/graph/badge.svg)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population) 
