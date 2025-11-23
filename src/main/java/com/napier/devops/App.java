@@ -20,6 +20,7 @@ import java.util.Scanner;
  *     <li>The number of people who speak selected languages
  *         (Chinese, English, Hindi, Spanish, Arabic),
  *         including their percentage of the world population.</li>
+ *
  * </ul>
  */
 public class App
