@@ -6,7 +6,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 32 requirements of 32 have been implemented, which is **100%** completed.
 
-> This reflects the current progress of the World Population Report System based on the official project criteria.
+> This shows the latest progress of the World Population Report System according to the official project requirements.
 ---
 
 * **Master Build Status** ![Master Build Status](https://img.shields.io/github/actions/workflow/status/nyanlinnthant4430/DevOps_World_Population/main.yml?branch=master)
@@ -65,7 +65,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 ##  Instructions for Setup
 
-###  Prerequisites
+###  Pre Setup Requirements
 - **Java JDK 19**
 - **MySQL Server**
 - **Apache Maven**
@@ -95,7 +95,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 # Contribution Guidelines
 
 Thank you so much for your interest in contributing to the **World Population Report System**.
-To ensure high code quality, consistency, and effective teamwork, please follow the guidelines outlined below.
+To ensure high code quality, consistency, and effective teamwork, please follow the guidelines instructions below.
 
 ---
 
@@ -103,10 +103,10 @@ To ensure high code quality, consistency, and effective teamwork, please follow 
 
 1. Ensure you have the following installed:
 
-    * **Java JDK 17+**
+    * **Java JDK 19**
     * **MySQL Server**
     * **Apache Maven**
-    * **IntelliJ IDEA** (or any preferred Java IDE)
+    * **IntelliJ IDEA** (or any Java IDE)
 2. Clone the repository:
 
 ```bash
@@ -165,23 +165,23 @@ git push origin feature/<your-feature-name>
 
 ---
 
-## Phase 5: Submit a Pull Request (PR)
+## Phase 5: Submit a Pull Request 
 
-1. Go to GitHub and create a **PR from your feature branch to `develop`**.
-2. Include a **clear title and description**:
+1. Go to GitHub and open a **Pull Request from your feature branch into the `develop`** branch.
+2. Provide a **clear title and detailed description**:
 
-    * What feature or fix you implemented
-    * Any related issue or task
-    * Steps to test the changes
-3. Request **at least one team member** for review.
+    * The feature or fix you added
+    * Any linked issues or tasks
+    * Instructions for testing the update
+3. Ask **at least one team member** to review your PR.
 
 ---
 
 ## Phase 6: Review and Merge
 
-1. Address any **feedback** or requested changes.
-2. Once approved, **merge the PR into `develop`**.
-3. Delete your feature branch to keep the repository clean:
+1. Make any necessary updates based on **review feedback**.
+2. After approval, **merge your pull request into `develop`** branch.
+3. Remove your feature branch afterward to keep the repository tidy.
 
 ```bash
 git branch -d feature/<your-feature-name>
@@ -203,9 +203,9 @@ git pull origin develop
 
 ## Phase 8: Follow the Code of Conduct
 
-* Maintain professional and respectful communication.
-* Ask questions or clarify requirements early.
-* Document assumptions, bugs, or design decisions in the code or project wiki.
+* Communicate respectfully and professionally at all times.
+* Raise questions or request clarification as early as possible to avoid misunderstandings.
+* Record any assumptions, issues, or design decisions in the codebase or project documentation.
 
 ---
 
