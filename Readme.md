@@ -11,7 +11,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 
 
-**Roles and Responsibilities of Team Members**
+#Roles and Responsibilities of Team Members
 
 | Matriculation Number | Name            | Role          | Responsibilities                                                                                                                                               |
 |----------------------|-----------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
