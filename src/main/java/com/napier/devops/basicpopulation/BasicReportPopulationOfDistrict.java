@@ -29,14 +29,18 @@ public class BasicReportPopulationOfDistrict
 
             if (rset.next())
             {
-                table.addRow(rset.getString("District"), rset.getLong("Population"));
+                Population p = new Population();
+                p.setName(rset.getString("District"));
+                p.setTotalPopulation(rset.getLong("Population"));
+
+                table.addRow(p.getName(), p.getTotalPopulation());
             }
             else
             {
                 table.addRow(district, "No data");
             }
-            table.addRule();
 
+            table.addRule();
             System.out.println(table.render());
         }
         catch (Exception e)

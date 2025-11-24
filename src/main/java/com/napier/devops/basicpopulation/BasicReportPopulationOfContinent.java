@@ -29,15 +29,18 @@ public class BasicReportPopulationOfContinent
 
             if (rset.next())
             {
-                long population = rset.getLong("Population");
-                table.addRow(rset.getString("Continent"), population);
+                Population p = new Population();
+                p.setName(rset.getString("Continent"));
+                p.setTotalPopulation(rset.getLong("Population"));
+
+                table.addRow(p.getName(), p.getTotalPopulation());
             }
             else
             {
                 table.addRow(continent, "No data");
             }
-            table.addRule();
 
+            table.addRule();
             System.out.println(table.render());
         }
         catch (Exception e)

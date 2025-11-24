@@ -1420,12 +1420,42 @@ public class App
     {
         System.out.println("\n===== BASIC POPULATION REPORTS (Non-interactive) =====");
 
-        System.out.println("\n===== Population of the WORLD =====");
+        // You can change these defaults to any valid values in your world database
+        String continent = "Asia";
+        String region    = "Southeast Asia";
+        String country   = "Myanmar";
+        String district  = "Yangon";
+        String city      = "Yangon";
+
+        // 1. World
+        System.out.println("\n===== 1. Population of the WORLD =====");
         BasicReportWorldPopulation.generateReport(con);
 
-        System.out.println("\n===== Population by Selected Languages =====");
+        // 2. Continent
+        System.out.println("\n===== 2. Population of continent '" + continent + "' =====");
+        BasicReportPopulationOfContinent.generateReport(con, continent);
+
+        // 3. Region
+        System.out.println("\n===== 3. Population of region '" + region + "' =====");
+        BasicReportPopulationOfRegion.generateReport(con, region);
+
+        // 4. Country
+        System.out.println("\n===== 4. Population of country '" + country + "' =====");
+        BasicReportPopulationOfCountry.generateReport(con, country);
+
+        // 5. District
+        System.out.println("\n===== 5. Population of district '" + district + "' =====");
+        BasicReportPopulationOfDistrict.generateReport(con, district);
+
+        // 6. City
+        System.out.println("\n===== 6. Population of city '" + city + "' =====");
+        BasicReportPopulationOfCity.generateReport(con, city);
+
+        // 7. Languages
+        System.out.println("\n===== 7. Population by Selected Languages =====");
         BasicReportLanguagePopulation.generateReport(con);
     }
+
 
     // ----------------------------------------------------------
     //  POLICYMAKER REPORTS

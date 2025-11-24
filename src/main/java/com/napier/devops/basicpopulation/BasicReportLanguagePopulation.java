@@ -7,12 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-/**
- * Shows the number of people who speak selected languages
- * (Chinese, English, Hindi, Spanish, Arabic)
- * ordered from greatest number to smallest,
- * including the percentage of the world population.
- */
 public class BasicReportLanguagePopulation
 {
     public static void generateReport(Connection con)
@@ -25,8 +19,9 @@ public class BasicReportLanguagePopulation
 
         try
         {
-            // 1) Get world population
             long worldPopulation = 0;
+
+            // Get world population
             try (Statement stmt = con.createStatement();
                  ResultSet rset = stmt.executeQuery("SELECT SUM(Population) AS Population FROM country"))
             {
@@ -42,7 +37,7 @@ public class BasicReportLanguagePopulation
                 return;
             }
 
-            // 2) Get speakers for the 5 target languages
+            // Query five selected languages
             String sql = """
                     SELECT cl.Language,
                            SUM(c.Population * cl.Percentage / 100) AS Speakers
@@ -63,11 +58,19 @@ public class BasicReportLanguagePopulation
 
                 while (rset.next())
                 {
-                    String language = rset.getString("Language");
-                    long speakers   = rset.getLong("Speakers");
-                    double percent  = (speakers * 100.0) / worldPopulation;
+                    LanguagePopulation lp = new LanguagePopulation();
 
-                    table.addRow(language, speakers, String.format("%.2f%%", percent));
+                    lp.setLanguage(rset.getString("Language"));
+                    lp.setSpeakers(rset.getLong("Speakers"));
+                    lp.setPercentageOfWorld(
+                            (rset.getLong("Speakers") * 100.0) / worldPopulation
+                    );
+
+                    table.addRow(
+                            lp.getLanguage(),
+                            lp.getSpeakers(),
+                            String.format("%.2f%%", lp.getPercentageOfWorld())
+                    );
                     table.addRule();
                 }
 
