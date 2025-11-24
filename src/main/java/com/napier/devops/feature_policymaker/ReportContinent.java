@@ -48,7 +48,7 @@ public class ReportContinent {
             }
 
             table.setTextAlignment(TextAlignment.CENTER);
-            System.out.println("\n🌎 Population by Continent");
+            System.out.println("\n Population by Continent");
             System.out.println(table.render());
         } catch (SQLException e) {
             System.out.println("Error generating continent report: " + e.getMessage());

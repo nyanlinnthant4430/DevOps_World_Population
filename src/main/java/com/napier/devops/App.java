@@ -969,7 +969,7 @@ import com.napier.devops.city_report.City;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -980,7 +980,7 @@ import java.util.Scanner;
  *  - City reports (feature)
  *  - Basic population reports
  *  - Policymaker reports
- *
+
  *  Single App.java, single connection, no menu.
  */
 public class App
@@ -996,7 +996,7 @@ public class App
 
     /**
      * Connects to the MySQL database with retry logic.
-     *
+
      * Examples:
      *  - Local run (IntelliJ): connect("localhost:33060", 0)
      *  - Docker / CI:         connect("db:3306", 30000)
@@ -1515,7 +1515,7 @@ public class App
 
     /**
      * Application entry point.
-     *
+
      * Behaviour:
      *  - Local run (IntelliJ): no args → connect to localhost:33060 and run all reports interactively.
      *  - Docker / CI: args[0] = host:port, args[1] = delayMs → non-interactive subset of reports.
