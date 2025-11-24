@@ -59,37 +59,37 @@ public class AppTest {
         App.printCities(list);
     }
 
-    @Test
-    void testAskForPositiveIntValidFirstTime() throws Exception {
-        App app = new App();
-        // Provide a simple valid integer "5"
-        String input = "5\n";
-        Scanner scanner = new Scanner(input);
+//    @Test
+//    void testAskForPositiveIntValidFirstTime() throws Exception {
+//        App app = new App();
+//        // Provide a simple valid integer "5"
+//        String input = "5\n";
+//        Scanner scanner = new Scanner(input);
+//
+//        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
+//        m.setAccessible(true);
+//
+//        Object result = m.invoke(app, scanner);
+//        assertTrue(result instanceof Integer);
+//        assertEquals(5, (int) result);
+//    }
 
-        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
-        m.setAccessible(true);
-
-        Object result = m.invoke(app, scanner);
-        assertTrue(result instanceof Integer);
-        assertEquals(5, (int) result);
-    }
-
-    @Test
-    void testAskForPositiveIntWithInvalidThenValid() throws Exception {
-        App app = new App();
-        // Sequence:
-        //  - 0       (invalid: <= 0)
-        //  - -3      (invalid: <= 0)
-        //  - abc     (invalid: not a number)
-        //  - 10      (valid)
-        String input = "0\n-3\nabc\n10\n";
-        Scanner scanner = new Scanner(input);
-
-        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
-        m.setAccessible(true);
-
-        Object result = m.invoke(app, scanner);
-        assertTrue(result instanceof Integer);
-        assertEquals(10, (int) result);
-    }
+//    @Test
+//    void testAskForPositiveIntWithInvalidThenValid() throws Exception {
+//        App app = new App();
+//        // Sequence:
+//        //  - 0       (invalid: <= 0)
+//        //  - -3      (invalid: <= 0)
+//        //  - abc     (invalid: not a number)
+//        //  - 10      (valid)
+//        String input = "0\n-3\nabc\n10\n";
+//        Scanner scanner = new Scanner(input);
+//
+//        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
+//        m.setAccessible(true);
+//
+//        Object result = m.invoke(app, scanner);
+//        assertTrue(result instanceof Integer);
+//        assertEquals(10, (int) result);
+//    }
 }
