@@ -315,11 +315,6 @@ public class AppIntegrationTest {
         // No assertions needed for line coverage – test will fail only if an exception is thrown
     }
 
-    @Test
-    void testBasicReportPopulationOfCity_noData() {
-        // A city that definitely does not exist → rset.next() == false → else branch
-        BasicReportPopulationOfCity.generateReport(con, "CityDoesNotExist_XYZ");
-    }
 
     @Test
     void testDistrictExists() {
@@ -334,6 +329,29 @@ public class AppIntegrationTest {
         BasicReportPopulationOfDistrict.generateReport(con, "NonExistentDistrict");
         // Output should show: "NonExistentDistrict | No data"
     }
+
+    @Test
+    void testBasicReportPopulationOfDistrict_noData() {
+        BasicReportPopulationOfDistrict.generateReport(con, "DistrictDoesNotExist_XYZ");
+    }
+
+    @Test
+    void testBasicReportPopulationOfDistrict_existing() {
+        // Yangon district exists
+        BasicReportPopulationOfDistrict.generateReport(con, "Yangon");
+    }
+
+    @Test
+    void testBasicReportPopulationOfCity_noData() {
+        BasicReportPopulationOfCity.generateReport(con, "CityDoesNotExist_XYZ");
+    }
+
+    @Test
+    void testBasicReportPopulationOfCity_existing() {
+        // Yangon exists in world.city
+        BasicReportPopulationOfCity.generateReport(con, "Yangon");
+    }
+
 
 
 

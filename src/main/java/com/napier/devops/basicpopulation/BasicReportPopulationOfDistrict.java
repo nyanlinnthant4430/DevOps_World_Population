@@ -1,7 +1,6 @@
 package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,15 +26,19 @@ public class BasicReportPopulationOfDistrict
             table.addRow("District", "Population");
             table.addRule();
 
-            if (rset.next())
+            boolean found = false;
+
+            while (rset.next())
             {
+                found = true;
                 Population p = new Population();
                 p.setName(rset.getString("District"));
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
             }
-            else
+
+            if (!found)
             {
                 table.addRow(district, "No data");
             }
