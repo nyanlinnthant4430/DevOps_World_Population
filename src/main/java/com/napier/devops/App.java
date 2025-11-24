@@ -461,7 +461,7 @@ public class App {
 
     public Connection getConnection() { return con; }
 
-    // Unified connect() using your schema formatt
+    // Unified connect() using your schema formattt
     public void connect(String location, int delay) {
         int retries = 10;
 
