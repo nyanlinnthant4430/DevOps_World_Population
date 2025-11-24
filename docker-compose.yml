@@ -8,5 +8,9 @@ services:
   db:
     build: db/.
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: world
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "33060:3306"
