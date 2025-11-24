@@ -20,7 +20,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 | 40804628             | Aung Win Htun   | Developer 1   | Docker setup, App.java, diagrams, integration tests for reports, SQL code, Coding for each Responsible Reports, reviewed other developers’ report/testing code |
 | 40804619             | Nyein Su Nandar | Developer 2   | GitHub repo structure, CI/CD pipeline setup, SQL code, Integration tests for reports, Coding for each Responsible Reports                                      |
 | 40804620             | Ye Htet Aung    | Developer 3   | Data model, service layer development, deployment configuration/testing, integration tests for reports, SQL code, Coding for each Responsible Reports          |
-| 40804633             | Aung Myat       | Developer 4   | Formatted report generation, Integration tests for reports, JUnit tests, SQL code, Coding for each Responsible Reports                                         |
+| 40804633             | Aung Myat       | Developer 4   | Integration tests for reports, JUnit tests, SQL code, Coding for each Responsible Reports                                         |
 
 
 
