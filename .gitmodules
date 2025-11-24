@@ -1,0 +1,3 @@
+[submodule "db/world_population"]
+	path = db/world_population
+	url = https://github.com/nyanlinnthant4430/DevOps_World_Population_Dataset.git
