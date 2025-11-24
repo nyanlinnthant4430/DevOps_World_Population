@@ -2,9 +2,14 @@ name: Bug Report
 description: File a bug report.
 title: "[Bug]: "
 labels: ["bug", "triage"]
-projects: ["padaukwai/Lab02R4"]
+projects: ["nyanlinnthant4430/DevOps_World_Population"]
 assignees:
-  - padaukwai
+  - Min Pyae Soe
+  - Nyan Linn Thant
+  - Aung Win Tun
+  - Nyein Su Nandar
+  - Ye Htet Aung
+  - Aung Myat
 body:
   - type: markdown
     attributes:
