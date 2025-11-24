@@ -2,17 +2,21 @@ package com.napier.devops;
 
 import com.napier.devops.FeatureCity_report.FeatureReportCitiesByDistrict;
 import com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict;
+import com.napier.devops.basicpopulation.BasicReportPopulationOfCity;
+import com.napier.devops.basicpopulation.BasicReportPopulationOfDistrict;
 import com.napier.devops.feature_policymaker.ReportContinent;
 import com.napier.devops.feature_policymaker.ReportCountry;
 import com.napier.devops.feature_policymaker.ReportRegion;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +33,7 @@ public class AppIntegrationTest {
         // Integration test assumes MySQL world DB is available on localhost:33060
         // and that user/password are root/example as in App.connect().
         app.connect("localhost:33060", 10000);
-        Connection con = app.getConnection();
+        con = app.getConnection();                 // <-- use field, not local variable
         assertNotNull(con, "Connection should not be null after connect()");
         try {
             assertFalse(con.isClosed(), "Connection should be open");
@@ -42,7 +46,6 @@ public class AppIntegrationTest {
     void tearDown() {
         app.disconnect();
         try {
-            Connection con = app.getConnection();
             if (con != null) {
                 assertTrue(con.isClosed(), "Connection should be closed after disconnect()");
             }
@@ -50,6 +53,19 @@ public class AppIntegrationTest {
             // If we cannot check, do not fail the whole suite – just log
             System.out.println("Error verifying closed connection in tearDown: " + e.getMessage());
         }
+    }
+
+    // Helper to capture System.out to assert on ASCII table output
+    private String captureOutput(Runnable runnable) {
+        PrintStream original = System.out;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(baos));
+        try {
+            runnable.run();
+        } finally {
+            System.setOut(original);
+        }
+        return baos.toString();
     }
 
     @Test
@@ -160,9 +176,9 @@ public class AppIntegrationTest {
 
         localApp.disconnect();
         try {
-            Connection con = localApp.getConnection();
-            if (con != null) {
-                assertTrue(con.isClosed(), "Connection should be closed after disconnect() on localApp");
+            Connection localCon = localApp.getConnection();
+            if (localCon != null) {
+                assertTrue(localCon.isClosed(), "Connection should be closed after disconnect() on localApp");
             }
         } catch (SQLException e) {
             System.out.println("Error verifying closed connection in testConnectNoArgConvenienceMethod: " + e.getMessage());
@@ -172,50 +188,43 @@ public class AppIntegrationTest {
     @Test
     @DisplayName("ReportContinent.generateReport executes without error")
     void testReportContinentGenerateReport() {
-        // Use the connection established in @BeforeAll
-        Connection con = app.getConnection();
-        assertNotNull(con, "Connection should not be null for ReportContinent test");
+        Connection localCon = app.getConnection();
+        assertNotNull(localCon, "Connection should not be null for ReportContinent test");
 
         ReportContinent report = new ReportContinent();
-
-        // If anything goes wrong (e.g. bad SQL), this test will fail with an exception.
-        report.generateReport(con);
+        report.generateReport(localCon);
     }
 
     @Test
     @DisplayName("ReportRegion.generateReport executes without error")
     void testReportRegionGenerateReport() {
-        Connection con = app.getConnection();
-        assertNotNull(con, "Connection should not be null for ReportRegion test");
+        Connection localCon = app.getConnection();
+        assertNotNull(localCon, "Connection should not be null for ReportRegion test");
 
         ReportRegion report = new ReportRegion();
-        report.generateReport(con);
+        report.generateReport(localCon);
     }
 
     @Test
     @DisplayName("ReportCountry.generateReport executes without error")
     void testReportCountryGenerateReport() {
-        Connection con = app.getConnection();
-        assertNotNull(con, "Connection should not be null for ReportCountry test");
+        Connection localCon = app.getConnection();
+        assertNotNull(localCon, "Connection should not be null for ReportCountry test");
 
         ReportCountry report = new ReportCountry();
-        report.generateReport(con);
+        report.generateReport(localCon);
     }
 
     @Test
     void testFeatureReportCitiesByDistrictBranches() {
-        // 1) BRANCH #1: Existing district -> loop executes
+        // 1) Existing district -> loop executes
         FeatureReportCitiesByDistrict.generateReport(app.getConnection(), "Yangon");
 
-        // 2) BRANCH #2: Non-existing district -> loop does NOT execute
+        // 2) Non-existing district -> loop does NOT execute
         FeatureReportCitiesByDistrict.generateReport(app.getConnection(), "DistrictDoesNotExistXYZ");
 
-        // 3) BRANCH #3: Exception path -> catch executes
+        // 3) Exception path -> catch executes
         FeatureReportCitiesByDistrict.generateReport(null, "Anything");
-
-        // 4) BRANCH #4 is automatically covered by:
-        //    - first call (non-empty list)
-        //    - second call (empty list)
     }
 
     @Test
@@ -223,18 +232,14 @@ public class AppIntegrationTest {
         Connection realCon = app.getConnection();
 
         // 1) Existing district + n > 0 -> while loop + printCities loop both execute
-        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
-                .generateReport(realCon, "Yangon", 5);
+        FeatureReportTopNCitiesDistrict.generateReport(realCon, "Yangon", 5);
 
         // 2) Non-existing district -> 0 rows -> while loop false, printCities sees empty list
-        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
-                .generateReport(realCon, "DistrictDoesNotExistXYZ", 5);
+        FeatureReportTopNCitiesDistrict.generateReport(realCon, "DistrictDoesNotExistXYZ", 5);
 
         // 3) Null connection -> prepareStatement throws, caught by catch (Exception e)
-        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
-                .generateReport(null, "Anything", 5);
+        FeatureReportTopNCitiesDistrict.generateReport(null, "Anything", 5);
     }
-
 
     @Test
     void testGenerateReport_Exception() {
@@ -246,7 +251,7 @@ public class AppIntegrationTest {
                     "example"
             );
         } catch (Exception ignored) {
-            // This MUST fail — it's intentional
+            // This must fail — it's intentional
         }
 
         FeatureReportCitiesByDistrict.generateReport(broken, "New York");
@@ -261,7 +266,7 @@ public class AppIntegrationTest {
                     "root",
                     "example"
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) { }
 
         FeatureReportTopNCitiesDistrict.generateReport(broken, "New York", 5);
     }
@@ -270,7 +275,6 @@ public class AppIntegrationTest {
     void testGenerateReportSuccess() {
         // This will hit the normal path
         FeatureReportCitiesByDistrict.generateReport(con, "TestDistrict");
-        // Output should show TestCity2 first, then TestCity1
     }
 
     @Test
@@ -279,15 +283,45 @@ public class AppIntegrationTest {
         FeatureReportCitiesByDistrict.generateReport(con, "NonExistingDistrict");
     }
 
-//    @Test
-//    void testGenerateReportException() throws SQLException {
-//        // Pass an invalid connection to trigger exception handling branch
-//        Connection badCon = DriverManager.getConnection(
-//                "jdbc:mysql://localhost:3306/invalidDB?useSSL=false", "root", "example"
-//        );
-//        FeatureReportCitiesByDistrict.generateReport(badCon, "TestDistrict");
-//        badCon.close();
-//    }
+    // -------------------------------------------------------------------------
+    // NEW TESTS: cover BasicReportPopulationOfCity and BasicReportPopulationOfDistrict
+    // -------------------------------------------------------------------------
 
+    @Test
+    void testBasicReportPopulationOfCity_existingCity() {
+        String output = captureOutput(() ->
+                BasicReportPopulationOfCity.generateReport(con, "Yangon")
+        );
 
+        assertTrue(output.contains("City") && output.contains("Population"));
+        assertTrue(output.contains("Yangon"));
+    }
+
+    @Test
+    void testBasicReportPopulationOfCity_noData() {
+        String output = captureOutput(() ->
+                BasicReportPopulationOfCity.generateReport(con, "CityDoesNotExist_XYZ")
+        );
+
+        assertTrue(output.contains("No data"));
+    }
+
+    @Test
+    void testBasicReportPopulationOfDistrict_existingDistrict() {
+        String output = captureOutput(() ->
+                BasicReportPopulationOfDistrict.generateReport(con, "Yangon")
+        );
+
+        assertTrue(output.contains("District") && output.contains("Population"));
+        assertTrue(output.contains("Yangon"));
+    }
+
+    @Test
+    void testBasicReportPopulationOfDistrict_noData() {
+        String output = captureOutput(() ->
+                BasicReportPopulationOfDistrict.generateReport(con, "DistrictDoesNotExist_XYZ")
+        );
+
+        assertTrue(output.contains("No data"));
+    }
 }
