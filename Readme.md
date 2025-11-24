@@ -1,4 +1,10 @@
 ![workflow](https://github.com/<nyanlinnthant4430>/<DevOps_World_Population>/actions/workflows/main.yml/badge.svg)
+![Build Master](https://github.com/nyanlinnthant4430/DevOps_World_Population/actions/workflows/main.yml/badge.svg?branch=master)
+![Build Develop](https://github.com/nyanlinnthant4430/DevOps_World_Population/actions/workflows/main.yml/badge.svg?branch=develop)
+[![Code Coverage](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/branch/featuretest/graph/badge.svg)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population)
+![Release](https://img.shields.io/github/v/release/nyanlinnthant4430/DevOps_World_Population)
+![License](https://img.shields.io/github/license/nyanlinnthant4430/DevOps_World_Population)
+
 # DevOPs_BSc_World_Population
 
 A Java-driven DevOps project designed to generate world population reports through SQL queries and object-oriented programming. The system fetches and presents population data for countries, cities, regions, and languages, organized and ranked by population. It also showcases professional software engineering practices, including Scrum methodology, Git branching strategies, and continuous integration.
@@ -25,7 +31,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 This section reflects the current progress of the **World Population Report System** based on the official project criteria.
 
-[![codecov](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/branch/featuretest/graph/badge.svg)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population)
+
 
 ## Requirements Evidence Table
 All Reports for World_Population
