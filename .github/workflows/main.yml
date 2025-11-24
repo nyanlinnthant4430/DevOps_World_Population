@@ -25,6 +25,10 @@ jobs:
       - name: Unit Tests
         run: |
           mvn -Dtest=com.napier.devops.AppTest test
+          mvn -Dtest=com.napier.devops.CityTest test
+          mvn -Dtest=com.napier.devops.CountryTest test
+          mvn -Dtest=com.napier.devops.FeatureCityTest test
+          mvn -Dtest=com.napier.devops.PopulationRecordTest test
       - name: CodeCov
         uses: codecov/codecov-action@v5
         with:

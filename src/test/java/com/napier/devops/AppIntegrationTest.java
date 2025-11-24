@@ -1,6 +1,7 @@
 package com.napier.devops;
 
 import com.napier.devops.FeatureCity_report.FeatureReportCitiesByDistrict;
+import com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict;
 import com.napier.devops.feature_policymaker.ReportContinent;
 import com.napier.devops.feature_policymaker.ReportCountry;
 import com.napier.devops.feature_policymaker.ReportRegion;
@@ -9,7 +10,9 @@ import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -232,6 +235,59 @@ public class AppIntegrationTest {
                 .generateReport(null, "Anything", 5);
     }
 
+
+    @Test
+    void testGenerateReport_Exception() {
+        Connection broken = null;
+        try {
+            broken = DriverManager.getConnection(
+                    "jdbc:mysql://invalid_host/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                    "root",
+                    "example"
+            );
+        } catch (Exception ignored) {
+            // This MUST fail — it's intentional
+        }
+
+        FeatureReportCitiesByDistrict.generateReport(broken, "New York");
+    }
+
+    @Test
+    void testGenerateReportTopN_Exception() {
+        Connection broken = null;
+        try {
+            broken = DriverManager.getConnection(
+                    "jdbc:mysql://invalid_host/world?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                    "root",
+                    "example"
+            );
+        } catch (Exception ignored) {}
+
+        FeatureReportTopNCitiesDistrict.generateReport(broken, "New York", 5);
+    }
+
+    @Test
+    void testGenerateReportSuccess() {
+        // This will hit the normal path
+        FeatureReportCitiesByDistrict.generateReport(con, "TestDistrict");
+        // Output should show TestCity2 first, then TestCity1
+    }
+
+    @Test
+    void testGenerateReportNoResults() {
+        // Should handle empty result set gracefully
+        FeatureReportCitiesByDistrict.generateReport(con, "NonExistingDistrict");
+    }
+
+//    @Test
+//    void testGenerateReportException() throws SQLException {
+//        // Pass an invalid connection to trigger exception handling branch
+//        Connection badCon = DriverManager.getConnection(
+//                "jdbc:mysql://localhost:3306/invalidDB?useSSL=false", "root", "example"
+//        );
+//        FeatureReportCitiesByDistrict.generateReport(badCon, "TestDistrict");
+//        badCon.close();
+//    }
 
 
 }
