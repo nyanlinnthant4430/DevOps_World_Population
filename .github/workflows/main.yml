@@ -60,7 +60,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos too
           files: ./target/site/jacoco/jacoco.xml
-          flags: Integration Tests # optional
+          flags: "Integration Tests" # quoted to be safe
           verbose: true # optional (default = false)
           slug: nyanlinnthant4430/DevOps_World_Population
 
@@ -84,7 +84,7 @@ jobs:
       - name: Package and Run docker compose
         run: |
           mvn -B -DskipTests -DfailIfNoTests=false package
-#           mvn package -DskipTests
+          # mvn package -DskipTests
           docker compose up --abort-on-container-exit
 
       - uses: marvinpinto/action-automatic-releases@latest
