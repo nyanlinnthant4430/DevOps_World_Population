@@ -1,6 +1,7 @@
 package com.napier.devops.basicpopulation;
 
 import de.vandermeer.asciitable.AsciiTable;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,19 +26,15 @@ public class BasicReportPopulationOfCity
             table.addRow("City", "Population");
             table.addRule();
 
-            boolean found = false;
-
-            while (rset.next())
+            if (rset.next())
             {
-                found = true;
                 Population p = new Population();
                 p.setName(rset.getString("Name"));
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
             }
-
-            if (!found)
+            else
             {
                 table.addRow(city, "No data");
             }
