@@ -1,11 +1,9 @@
-** World Population Report System **
-
-A Java-driven DevOps project designed to generate world population reports through SQL queries and object-oriented programming. The system fetches and presents population data for countries, cities, regions, and languages, organized and ranked by population. It also showcases professional software engineering practices, including Scrum methodology, Git branching strategies, and continuous integration.
 ![workflow](https://github.com/<nyanlinnthant4430>/<DevOps_World_Population>/actions/workflows/main.yml/badge.svg)
 # DevOPs_BSc_World_Population
-[![codecov](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/branch/featuretest/graph/badge.svg)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population)
-All Reports for World_Population
-## Requirements Evidence Table
+
+A Java-driven DevOps project designed to generate world population reports through SQL queries and object-oriented programming. The system fetches and presents population data for countries, cities, regions, and languages, organized and ranked by population. It also showcases professional software engineering practices, including Scrum methodology, Git branching strategies, and continuous integration.
+
+
 
 **Roles and Responsibilities of Team Members**
 
@@ -27,6 +25,10 @@ All Reports for World_Population
 
 This section reflects the current progress of the **World Population Report System** based on the official project criteria.
 
+[![codecov](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/branch/featuretest/graph/badge.svg)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population)
+
+## Requirements Evidence Table
+All Reports for World_Population
 
 | ID | Requirement Name                                                                                      | Met? | Screenshot                                                                                                                                                                    |
 |----|-------------------------------------------------------------------------------------------------------|-----|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
