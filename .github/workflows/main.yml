@@ -83,7 +83,8 @@ jobs:
 
       - name: Package and Run docker compose
         run: |
-          mvn -B -DskipTests -DfailIfNoTests=false package
+#          mvn -B -DskipTests -DfailIfNoTests=false package
+           mvn package -DskipTests    
           docker compose up --abort-on-container-exit
 
       - uses: marvinpinto/action-automatic-releases@latest
