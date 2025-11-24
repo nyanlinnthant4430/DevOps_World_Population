@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Unit Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.AdditionalAppTest test
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops
 
 
   IntegrationTests:
@@ -47,7 +47,7 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops.AdditionalAppIntegrationTest test
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops
 
       - name: Cleanup Docker
         run: |
@@ -83,8 +83,8 @@ jobs:
 
       - name: Package and Run docker compose
         run: |
-#          mvn -B -DskipTests -DfailIfNoTests=false package
-           mvn package -DskipTests    
+          mvn -B -DskipTests -DfailIfNoTests=false package
+#           mvn package -DskipTests
           docker compose up --abort-on-container-exit
 
       - uses: marvinpinto/action-automatic-releases@latest
