@@ -1,5 +1,6 @@
 package com.napier.devops;
 
+import com.napier.devops.FeatureCity_report.FeatureReportCitiesByDistrict;
 import com.napier.devops.feature_policymaker.ReportContinent;
 import com.napier.devops.feature_policymaker.ReportCountry;
 import com.napier.devops.feature_policymaker.ReportRegion;
@@ -198,5 +199,39 @@ public class AppIntegrationTest {
         report.generateReport(con);
     }
 
+    @Test
+    void testFeatureReportCitiesByDistrictBranches() {
+        // 1) BRANCH #1: Existing district -> loop executes
+        FeatureReportCitiesByDistrict.generateReport(app.getConnection(), "Yangon");
 
+        // 2) BRANCH #2: Non-existing district -> loop does NOT execute
+        FeatureReportCitiesByDistrict.generateReport(app.getConnection(), "DistrictDoesNotExistXYZ");
+
+        // 3) BRANCH #3: Exception path -> catch executes
+        FeatureReportCitiesByDistrict.generateReport(null, "Anything");
+
+        // 4) BRANCH #4 is automatically covered by:
+        //    - first call (non-empty list)
+        //    - second call (empty list)
     }
+
+    @Test
+    void testFeatureReportTopNCitiesDistrictBranches() {
+        Connection realCon = app.getConnection();
+
+        // 1) Existing district + n > 0 -> while loop + printCities loop both execute
+        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
+                .generateReport(realCon, "Yangon", 5);
+
+        // 2) Non-existing district -> 0 rows -> while loop false, printCities sees empty list
+        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
+                .generateReport(realCon, "DistrictDoesNotExistXYZ", 5);
+
+        // 3) Null connection -> prepareStatement throws, caught by catch (Exception e)
+        com.napier.devops.FeatureCity_report.FeatureReportTopNCitiesDistrict
+                .generateReport(null, "Anything", 5);
+    }
+
+
+
+}
