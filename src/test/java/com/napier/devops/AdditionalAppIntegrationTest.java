@@ -82,4 +82,7 @@ public class AdditionalAppIntegrationTest {
     void testPopulationByLanguage() {
         assertReportRuns(() -> BasicReportLanguagePopulation.generateReport(app.getConnection()));
     }
+
+
+
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,6 +56,20 @@ public class AppIntegrationTest
         stmt.close();
     }
 
+    /** Run code with fake console input (for methods using new Scanner(System.in)) */
+    private void withInput(String input, Runnable action) {
+        InputStream originalIn = System.in;
+        try {
+            System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+            action.run();
+        } finally {
+            System.setIn(originalIn);
+        }
+    }
+
+
+
+
     // ---- REPORT TEST HELPERS ----
 
     private void assertReportRuns(Runnable report)
@@ -65,6 +80,52 @@ public class AppIntegrationTest
             fail("Report should not throw an exception: " + e.getMessage());
         }
     }
+
+
+
+    @Test
+    void testConnectDefault() {
+        App localApp = new App();
+        assertDoesNotThrow(() -> app.connect());
+        localApp.disconnect();
+    }
+
+
+
+
+    @Test
+    void testDisconnect() {
+        App localApp = new App();
+        localApp.connect("localhost:33060", 0);
+        assertDoesNotThrow(localApp::disconnect);
+    }
+
+    @Test
+    void testRunCapitalCityReports() {
+        // Continent + Region
+        String input = "Asia\nSouth-Eastern Asia\n";
+
+        withInput(input, () ->
+                assertDoesNotThrow(() -> app.runCapitalCityReports())
+        );
+    }
+
+    @Test
+    void testRunCountryReports() {
+        // Continent + Region
+        String input = "Asia\nSouth-Eastern Asia\n";
+
+        withInput(input, () ->
+                assertDoesNotThrow(() -> app.runCountryReports())
+        );
+    }
+
+
+
+
+
+
+
 
     // ---- REPORT INTEGRATION TESTS ----
 
@@ -111,6 +172,22 @@ public class AppIntegrationTest
     }
 
     @Test
+    void testRunBasicPopulationReports() {
+    String input = String.join("\n",
+            "Asia",
+            "South-Eastern Asia",
+            "Myanmar",
+            "Yangon",
+            "Yangon"
+    ) + "\n";
+
+    withInput(input, () ->
+            assertDoesNotThrow(() -> app.runBasicPopulationReports())
+    );
+}
+
+
+    @Test
     void testMenuOnlyNavigation() {
         // Only open menu then exit immediately
         String fakeInput = "0\n";   // exit the menu
@@ -129,5 +206,45 @@ public class AppIntegrationTest
         app.disconnect();
     }
 
+    @Test
+    void testMainMethod() {
+        // Fake menu input: choose option "0" to exit immediately
+        String fakeInput = "0\n";
+
+        InputStream originalIn = System.in;
+
+        try {
+            System.setIn(new ByteArrayInputStream(fakeInput.getBytes(StandardCharsets.UTF_8)));
+
+            // Run main with args (to cover the args.length >= 2 path)
+            String[] args = { "localhost:33060", "0" };
+
+            assertDoesNotThrow(() -> App.main(args));
+
+        } finally {
+            System.setIn(originalIn);  // restore input so other tests aren't affected
+        }
+    }
+
+    @Test
+    void testRunPolicymakerReports() {
+        assertDoesNotThrow(() -> app.runPolicymakerReports());
+    }
+
+    @Test
+    void testRunCityReports() {
+        // Fake inputs: Continent + Region
+        String fakeInput = "Asia\nSouth-Eastern Asia\n";
+
+        InputStream originalIn = System.in;
+        try {
+            System.setIn(new ByteArrayInputStream(fakeInput.getBytes(StandardCharsets.UTF_8)));
+
+            assertDoesNotThrow(() -> app.runCityReports());
+
+        } finally {
+            System.setIn(originalIn);   // restore original System.in
+        }
+    }
 
 }

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +53,13 @@ public class CityAppIntegrationTest
         rset.close();
         stmt.close();
     }
+
+
+
+
+
+
+
 
     // ---- REPORT TEST HELPERS ----
 

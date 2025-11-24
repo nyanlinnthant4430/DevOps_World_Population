@@ -439,7 +439,7 @@
 // === Unified Combined App.java (Rebuilt using your model classes) ===
 // Uses: City, Country, FeatureCity, DatabaseConnection
 // One main(), one connect(), unified menu, consistent models
-
+//
 package com.napier.devops;
 
 import java.sql.*;
@@ -461,7 +461,7 @@ public class App {
 
     public Connection getConnection() { return con; }
 
-    // Unified connect() using your schema formattt
+    // Unified connect() using your schema format
     public void connect(String location, int delay) {
         int retries = 10;
 
@@ -568,8 +568,8 @@ public class App {
     // ==========================================================
     //  MAIN MENU
     // ==========================================================
-    private void runMenu() {
-        Scanner s = new Scanner(System.in);
+    public void runMenu() {
+       Scanner s = new Scanner(System.in);
 
         while (true) {
             System.out.println("=========== MAIN MENU ===========");
@@ -600,7 +600,7 @@ public class App {
     // ==========================================================
     //  CAPITAL CITY REPORTS
     // ==========================================================
-    private void runCapitalCityReports() {
+    public void runCapitalCityReports() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("\n--- CAPITAL CITIES REPORT ---");
@@ -616,7 +616,7 @@ public class App {
     // ==========================================================
     //  CITY REPORTS (FeatureCity uses your getters)
     // ==========================================================
-    private void runCityReports() {
+    public void runCityReports() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("\n--- ALL CITIES BY POPULATION ---");
@@ -632,7 +632,7 @@ public class App {
     // ==========================================================
     //  BASIC POPULATION (uses your model formats)
     // ==========================================================
-    private void runBasicPopulationReports() {
+    public void runBasicPopulationReports() {
         Scanner sc = new Scanner(System.in);
 
         BasicReportWorldPopulation.generateReport(con);
@@ -658,7 +658,7 @@ public class App {
     // ==========================================================
     //  COUNTRY REPORTS
     // ==========================================================
-    private void runCountryReports() {
+    public void runCountryReports() {
         Scanner sc = new Scanner(System.in);
 
         ReportAllCountriesByPopulation.generateReport(con);
@@ -673,7 +673,7 @@ public class App {
     // ==========================================================
     //  POLICYMAKER POPULATION REPORTS
     // ==========================================================
-    private void runPolicymakerReports() {
+    public void runPolicymakerReports() {
         ReportPopulationByContinent.generateReport(con);
         ReportPopulationByRegion.generateReport(con);
         ReportPopulationByCountry.generateReport(con);
@@ -692,3 +692,6 @@ public class App {
         finally { app.disconnect(); }
     }
 }
+
+
+

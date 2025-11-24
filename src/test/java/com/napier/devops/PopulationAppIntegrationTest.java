@@ -30,6 +30,8 @@ public class PopulationAppIntegrationTest {
         assertNotNull(app.getConnection(), "Connection should not be null after connect().");
     }
 
+
+
     @Test
     void testCountryTableHasData() throws Exception {
         Connection con = app.getConnection();
@@ -43,6 +45,8 @@ public class PopulationAppIntegrationTest {
         stmt.close();
     }
 
+
+
     // Helper to check if a report runs successfully
     private void assertReportRuns(Runnable report) {
         try {
@@ -51,6 +55,8 @@ public class PopulationAppIntegrationTest {
             fail("Report should not throw an exception: " + e.getMessage());
         }
     }
+
+
 
     @Test
     void testPopulationByContinentReport() {
