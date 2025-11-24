@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Unit Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops test
 
 
   IntegrationTests:
@@ -47,7 +47,7 @@ jobs:
           sleep 25
 
       - name: Run Integration Tests
-        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops
+        run: mvn -B -DfailIfNoTests=false -Dtest=com.napier.devops test
 
       - name: Cleanup Docker
         run: |
