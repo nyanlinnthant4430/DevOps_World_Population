@@ -11,7 +11,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 * **Master Build Status** ![Master Build Status](https://img.shields.io/github/actions/workflow/status/nyanlinnthant4430/DevOps_World_Population/main.yml?branch=master)
 * **Develop Build Status** ![Develop Build Status](https://img.shields.io/github/actions/workflow/status/nyanlinnthant4430/DevOps_World_Population/main.yml?branch=develop)
-* **License** ![GitHub license](https://img.shields.io/github/license/nyanlinnthant4430/DevOps_World_Population)
+* **License** [![LICENSE](https://img.shields.io/github/license/nyanlinnthant4430/DevOps_World_Population.svg?style=flat-square)](https://github.com/nyanlinnthant4430/DevOps_World_Population/blob/master/LICENSE)
 * **Release** [![Releases](https://img.shields.io/github/release/nyanlinnthant4430/DevOps_World_Population/all.svg?style=flat-square)](https://github.com/nyanlinnthant4430/DevOps_World_Population/releases)
 * [![codecov](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population/graph/badge.svg?token=PUA2YDA3R2)](https://codecov.io/gh/nyanlinnthant4430/DevOps_World_Population)
 
