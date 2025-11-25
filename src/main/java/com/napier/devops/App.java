@@ -1461,10 +1461,10 @@ public class App {
      * Runs all report families with user input (no menu, just sequential questions).
      */
     private void runAllReportsInteractive(Scanner scanner) {
-//        runCountryReportsInteractive(scanner);
-//        runCapitalCityReportsInteractive(scanner);
-//        runCityReportsInteractive(scanner);
-//        runBasicPopulationReportsInteractive(scanner);
+        runCountryReportsInteractive(scanner);
+        runCapitalCityReportsInteractive(scanner);
+        runCityReportsInteractive(scanner);
+        runBasicPopulationReportsInteractive(scanner);
         runPolicyMakerReports();
     }
 
