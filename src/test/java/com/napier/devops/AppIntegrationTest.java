@@ -85,62 +85,66 @@ public class AppIntegrationTest {
                 // ==========================
                 // 1) Country reports
                 // ==========================
-                // Prompts:
-                //   Enter N for Top N countries in the WORLD:
-                //   Enter Continent Name:
-                //   Enter N for Top N countries in this CONTINENT:
-                //   Enter Region Name:
-                //   Enter N for Top N countries in this REGION:
-                "10",              // nWorld
-                "Asia",            // continent
-                "5",               // nContinent
-                "Southeast Asia",  // region
-                "5",               // nRegion
+                // New prompts (after refactor to mimic capital style):
+                //   continentAll
+                //   regionAll
+                //   nWorld
+                //   continentTop
+                //   nContinent
+                //   regionTop
+                //   nRegion
+                "Asia",             // continentAll
+                "Southeast Asia",   // regionAll
+                "10",               // nWorld (top countries in world)
+                "Asia",             // continentTop
+                "5",                // nContinent
+                "Southeast Asia",   // regionTop
+                "5",                // nRegion
 
                 // ==========================
                 // 2) Capital city reports
                 // ==========================
-                // Expected prompts (based on your comment):
+                // Prompts:
                 //   continentAll, regionAll, nWorld, continentTop, nContinent, regionTop, nRegion
-                "Asia",            // continentAll
-                "Eastern Asia",    // regionAll
-                "5",               // nWorld (top capitals in world)
-                "Europe",          // continentTop
-                "3",               // nContinent
-                "Western Europe",  // regionTop
-                "2",               // nRegion
+                "Asia",             // continentAll
+                "Eastern Asia",     // regionAll
+                "5",                // nWorld (top capitals in world)
+                "Europe",           // continentTop
+                "3",                // nContinent
+                "Western Europe",   // regionTop
+                "2",                // nRegion
 
                 // ==========================
                 // 3) City reports
                 // ==========================
-                // Prompts (from your comment):
+                // Prompts:
                 //   continentAll, regionAll, countryAll, districtAll,
                 //   nWorld, topContinent, nContinent, topRegion, nRegion,
                 //   topCountry, nCountry, topDistrict, nDistrict
-                "Asia",            // continentAll
-                "Southeast Asia",  // regionAll
-                "Myanmar",         // countryAll
-                "Yangon",          // districtAll
-                "10",              // nWorld
-                "Asia",            // topContinent
-                "5",               // nContinent
-                "Southeast Asia",  // topRegion
-                "5",               // nRegion
-                "Myanmar",         // topCountry
-                "5",               // nCountry
-                "Yangon",          // topDistrict
-                "5",               // nDistrict
+                "Asia",             // continentAll
+                "Southeast Asia",   // regionAll
+                "Myanmar",          // countryAll
+                "Yangon",           // districtAll
+                "10",               // nWorld
+                "Asia",             // topContinent
+                "5",                // nContinent
+                "Southeast Asia",   // topRegion
+                "5",                // nRegion
+                "Myanmar",          // topCountry
+                "5",                // nCountry
+                "Yangon",           // topDistrict
+                "5",                // nDistrict
 
                 // ==========================
                 // 4) Basic population reports
                 // ==========================
                 // Prompts:
                 //   continent, region, country, district, city
-                "Asia",            // continent
-                "Southeast Asia",  // region
-                "Myanmar",         // country
-                "Yangon",          // district
-                "Yangon"           // city
+                "Asia",             // continent
+                "Southeast Asia",   // region
+                "Myanmar",          // country
+                "Yangon",           // district
+                "Yangon"            // city
         ) + "\n";
 
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -157,6 +161,7 @@ public class AppIntegrationTest {
         //  - runPolicyMakerReports
         m.invoke(app, scanner);
     }
+
 
 
     @Test
