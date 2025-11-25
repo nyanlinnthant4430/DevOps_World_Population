@@ -56,19 +56,6 @@ public class AppIntegrationTest {
         }
     }
 
-    // Helper to capture System.out to assert on ASCII table output
-    private String captureOutput(Runnable runnable) {
-        PrintStream original = System.out;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(baos));
-        try {
-            runnable.run();
-        } finally {
-            System.setOut(original);
-        }
-        return baos.toString();
-    }
-
     @Test
     void testRunAllReportsNonInteractiveViaReflection() throws Exception {
         Method m = App.class.getDeclaredMethod("runAllReportsNonInteractive");
