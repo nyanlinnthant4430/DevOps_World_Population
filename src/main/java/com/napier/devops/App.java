@@ -1136,44 +1136,45 @@ public class App {
     {
         System.out.println("\n===== COUNTRY REPORTS =====");
 
-        // 1. N for top N countries in the world
-        System.out.print("Enter N for Top N countries in the WORLD: ");
-        int nWorld = Integer.parseInt(scanner.nextLine().trim());
-
-        // 2. Continent name
-        System.out.print("Enter Continent Name: ");
-        String continent = scanner.nextLine().trim();
-
-        // 3. N for top N countries in this continent
-        System.out.print("Enter N for Top N countries in continent '" + continent + "': ");
-        int nContinent = Integer.parseInt(scanner.nextLine().trim());
-
-        // 4. Region name
-        System.out.print("Enter Region Name: ");
-        String region = scanner.nextLine().trim();
-
-        // 5. N for top N countries in this region
-        System.out.print("Enter N for Top N countries in region '" + region + "': ");
-        int nRegion = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
+        // 1. All countries in the world by population
+        System.out.println("\n===== 1. All countries in the WORLD by population =====");
         ReportAllCountriesByPopulation.generateReport(con);
 
-        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
-        ReportCountriesByContinent.generateReport(con, continent);
+        // 2. All countries in a continent by population
+        System.out.println("\n===== 2. All countries in a CONTINENT by population =====");
+        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        String continentAll = scanner.nextLine().trim();
+        ReportCountriesByContinent.generateReport(con, continentAll);
 
-        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
-        ReportCountriesByRegion.generateReport(con, region);
+        // 3. All countries in a region by population
+        System.out.println("\n===== 3. All countries in a REGION by population =====");
+        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        String regionAll = scanner.nextLine().trim();
+        ReportCountriesByRegion.generateReport(con, regionAll);
 
-        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
+        // 4. Top N countries in the world
+        System.out.println("\n===== 4. Top N countries in the WORLD by population =====");
+        int nWorld = askForPositiveInt(scanner, "Enter N for top countries in the WORLD: ");
         ReportTopNCountriesWorld.generateReport(con, nWorld);
 
-        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
-        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
+        // 5. Top N countries in a continent
+        System.out.println("\n===== 5. Top N countries in a CONTINENT by population =====");
+        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        String continentTop = scanner.nextLine().trim();
+        int nContinent = askForPositiveInt(scanner, "Enter N for top countries in this CONTINENT: ");
+        ReportTopNCountriesContinent.generateReport(con, continentTop, nContinent);
 
-        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
-        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
+        // 6. Top N countries in a region
+        System.out.println("\n===== 6. Top N countries in a REGION by population =====");
+        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        String regionTop = scanner.nextLine().trim();
+        int nRegion = askForPositiveInt(scanner, "Enter N for top countries in this REGION: ");
+        ReportTopNCountriesRegion.generateReport(con, regionTop, nRegion);
+
+        System.out.println("\nAll 6 country reports have been generated.");
     }
+
+
 
 
     private void runCountryReportsNonInteractive() {
