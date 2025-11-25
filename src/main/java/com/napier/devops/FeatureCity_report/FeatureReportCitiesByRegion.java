@@ -6,21 +6,27 @@ import java.sql.*;
 import java.util.LinkedList;
 
 public class FeatureReportCitiesByRegion {
+
     public static void generateReport(Connection con, String region) {
         try {
-            PreparedStatement pstmt = con.prepareStatement(
-                    "SELECT city.ID, city.Name, country.Name AS Country, city.District, city.Population " +
-                            "FROM city JOIN country ON city.CountryCode = country.Code " +
-                            "WHERE country.Region = ? " +
-                            "ORDER BY city.Population DESC;"
-            );
+            PreparedStatement pstmt = con.prepareStatement("""
+                    SELECT
+                        city.Name AS Name,
+                        country.Name AS Country,
+                        city.District AS District,
+                        city.Population AS Population
+                    FROM city
+                    JOIN country ON city.CountryCode = country.Code
+                    WHERE country.Region = ?
+                    ORDER BY city.Population DESC;
+            """);
             pstmt.setString(1, region);
+
             ResultSet rset = pstmt.executeQuery();
 
             LinkedList<FeatureCity> cities = new LinkedList<>();
             while (rset.next()) {
                 FeatureCity c = new FeatureCity();
-                c.id = rset.getInt("ID");
                 c.name = rset.getString("Name");
                 c.country = rset.getString("Country");
                 c.district = rset.getString("District");
@@ -28,23 +34,21 @@ public class FeatureReportCitiesByRegion {
                 cities.add(c);
             }
 
-            printCities(cities);
-        } catch (Exception e) {
-            System.out.println("Error generating report: " + e.getMessage());
-        }
-    }
-
-    private static void printCities(LinkedList<FeatureCity> cities) {
-        AsciiTable table = new AsciiTable();
-        table.addRule();
-        table.addRow("ID", "City", "Country", "District", "Population");
-        table.addRule();
-
-        for (FeatureCity c : cities) {
-            table.addRow(c.id, c.name, c.country, c.district, c.population);
+            AsciiTable table = new AsciiTable();
             table.addRule();
-        }
+            table.addRow("Name", "Country", "District", "Population");
+            table.addRule();
 
-        System.out.println(table.render());
+            for (FeatureCity c : cities) {
+                table.addRow(c.name, c.country, c.district, String.format("%,d", c.population));
+                table.addRule();
+            }
+
+            System.out.println("Cities by Region: " + region);
+            System.out.println(table.render());
+
+        } catch (Exception e) {
+            System.out.println("Error generating region city report: " + e.getMessage());
+        }
     }
 }

@@ -1,4 +1,4 @@
-# World Population Report System
+# Population Reporting System
 
 A Java-driven DevOps project designed to generate world population reports through SQL queries and object-oriented programming. The system fetches and presents population data for countries, cities, regions, and languages, organized and ranked by population. It also showcases professional software engineering practices, including Scrum methodology, Git branching strategies, and continuous integration.
 
@@ -17,14 +17,14 @@ A Java-driven DevOps project designed to generate world population reports throu
 
 ##  Role of Team Members & Responsibilities
 
-| Student ID   | Name              | Role                     | Responsibility                                                                               |
-|--------------|-------------------|--------------------------|----------------------------------------------------------------------------------------------|
-| **40804626** | [Min Pyae Soe]    | Scrum Master / Developer | Backlog and Sprint/ Git Management/ Merge Branches                                           |
-| **40804627** | [Nyan Linn Thant] | Product Owner/ Developer | Overall Management/ Backlog and Sprint / Git Management/ Plant UML / Use Case/ Documentation |
-| **40804628** | [Aung Win Tun]    | Developer / Tester       | Country Report / Population Report / Testing                                                 |
-| **40804619** | [Nyein Su Nandar] | Developer / Tester       | Capital City Report / Testing                                                                |
-| **40894620** | [Ye Htet Aung]    | Developer / Tester       | City Report / Testing                                                                        |
-| **40804633** | [Aung Myat]       | Developer / Tester       | Policy Report / Testing                                                                      |
+| Student ID   | Name            | Role                     | Responsibility                                                                               |
+|--------------|-----------------|--------------------------|----------------------------------------------------------------------------------------------|
+| **40804626** | Min Pyae Soe    | Scrum Master / Developer | Backlog and Sprint/ Git Management/ Merge Branches                                           |
+| **40804627** | Nyan Linn Thant | Product Owner/ Developer | Overall Management/ Backlog and Sprint / Git Management/ Plant UML / Use Case/ Documentation |
+| **40804628** | Aung Win Tun    | Developer / Tester       | Country Report / Population Report / Testing                                                 |
+| **40804619** | Nyein Su Nandar | Developer / Tester       | Capital City Report / Testing                                                                |
+| **40894620** | Ye Htet Aung    | Developer / Tester       | City Report / Testing                                                                        |
+| **40804633** | Aung Myat       | Developer / Tester       | Policy Report / Testing                                                                      |
 
 
 ### Branching Strategy
@@ -37,7 +37,7 @@ A Java-driven DevOps project designed to generate world population reports throu
 ### Packages
 - **com.napier.devops** -> Main Application Classes
 - **com.napier.devops.basicpopulation** -> Population Reports
-- **com.napier.devops.city_report** -> Capital City Reports
+- **com.napier.devops.capital_city_report** -> Capital City Reports
 - **com.napier.devops.country_report** -> Country Reports
 - **com.napier.devops.feature_policymaker** -> Policy Reports
 - **com.napier.devops.FeatureCity_report** -> City Reports

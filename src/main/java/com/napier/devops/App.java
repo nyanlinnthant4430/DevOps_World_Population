@@ -958,14 +958,14 @@
 //
 package com.napier.devops;
 
-import com.napier.devops.city_report.*;
+import com.napier.devops.capital_city_report.*;
 import com.napier.devops.FeatureCity_report.*;
 import com.napier.devops.basicpopulation.*;
 import com.napier.devops.country_report.*;
 import com.napier.devops.feature_policymaker.*;
 
 import com.napier.devops.country_report.Country;
-import com.napier.devops.city_report.City;
+import com.napier.devops.capital_city_report.City;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -1156,8 +1156,88 @@ public class App
     }
 
     // ----------------------------------------------------------
-    //  CAPITAL CITY REPORTS
+    //  COUNTRY REPORTS
     // ----------------------------------------------------------
+
+    private void runCountryReportsInteractive(Scanner scanner)
+    {
+        System.out.println("\n===== COUNTRY REPORTS =====");
+
+        // === 1. All countries in the world (no input required)
+        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
+        ReportAllCountriesByPopulation.generateReport(con);
+
+        // === 2. Ask continent → Report
+        System.out.print("\nEnter Continent Name for continent report: ");
+        String continent = scanner.nextLine();
+
+        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
+        ReportCountriesByContinent.generateReport(con, continent);
+
+        // === 3. Ask region → Report
+        System.out.print("\nEnter Region Name for region report: ");
+        String region = scanner.nextLine();
+
+        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
+        ReportCountriesByRegion.generateReport(con, region);
+
+        // === 4. Ask N for WORLD → Report
+        System.out.print("\nEnter N for Top N countries in the WORLD: ");
+        int nWorld = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
+        ReportTopNCountriesWorld.generateReport(con, nWorld);
+
+        // === 5. Ask N for SAME continent → Report
+        System.out.print("\nEnter N for Top N countries in continent '" + continent + "': ");
+        int nContinent = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
+        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
+
+        // === 6. Ask N for SAME region → Report
+        System.out.print("\nEnter N for Top N countries in region '" + region + "': ");
+        int nRegion = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
+        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
+    }
+
+    private void runCountryReportsNonInteractive()
+    {
+        System.out.println("\n===== COUNTRY REPORTS (Non-interactive) =====");
+
+        String continent = "Asia";
+        String region = "Southeast Asia";
+        int nWorld = 10;
+        int nContinent = 5;
+        int nRegion = 5;
+
+        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
+        ReportAllCountriesByPopulation.generateReport(con);
+
+        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
+        ReportCountriesByContinent.generateReport(con, continent);
+
+        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
+        ReportCountriesByRegion.generateReport(con, region);
+
+        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
+        ReportTopNCountriesWorld.generateReport(con, nWorld);
+
+        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
+        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
+
+        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
+        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
+    }
+
+//     ----------------------------------------------------------
+//      CAPITAL CITY REPORTS
+//     ----------------------------------------------------------
 
     private void runCapitalCityReportsInteractive(Scanner scanner)
     {
@@ -1208,83 +1288,11 @@ public class App
         ReportAllCapitalCitiesByPopulation.generateReport(con);
     }
 
-    // ----------------------------------------------------------
-    //  COUNTRY REPORTS
-    // ----------------------------------------------------------
 
-    private void runCountryReportsInteractive(Scanner scanner)
-    {
-        System.out.println("\n===== COUNTRY REPORTS =====");
-
-        System.out.print("Enter N for Top N countries in the WORLD: ");
-        int nWorld = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.print("Enter Continent Name: ");
-        String continent = scanner.nextLine();
-
-        System.out.print("Enter N for Top N countries in this CONTINENT: ");
-        int nContinent = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.print("Enter Region Name: ");
-        String region = scanner.nextLine();
-
-        System.out.print("Enter N for Top N countries in this REGION: ");
-        int nRegion = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
-        ReportAllCountriesByPopulation.generateReport(con);
-
-        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
-        ReportCountriesByContinent.generateReport(con, continent);
-
-        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
-        ReportCountriesByRegion.generateReport(con, region);
-
-        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
-        ReportTopNCountriesWorld.generateReport(con, nWorld);
-
-        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
-        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
-
-        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
-        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
-    }
-
-    private void runCountryReportsNonInteractive()
-    {
-        System.out.println("\n===== COUNTRY REPORTS (Non-interactive) =====");
-
-        String continent = "Asia";
-        String region = "Southeast Asia";
-        int nWorld = 10;
-        int nContinent = 5;
-        int nRegion = 5;
-
-        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
-        ReportAllCountriesByPopulation.generateReport(con);
-
-        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
-        ReportCountriesByContinent.generateReport(con, continent);
-
-        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
-        ReportCountriesByRegion.generateReport(con, region);
-
-        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
-        ReportTopNCountriesWorld.generateReport(con, nWorld);
-
-        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
-        ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
-
-        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
-        ReportTopNCountriesRegion.generateReport(con, region, nRegion);
-    }
-
-    // ----------------------------------------------------------
-    //  CITY REPORTS (FeatureCity_report)
-    // ----------------------------------------------------------
+//
+//     ----------------------------------------------------------
+//      CITY REPORTS (FeatureCity_report)
+//     ----------------------------------------------------------
 
     private void runCityReportsInteractive(Scanner scanner)
     {
@@ -1369,9 +1377,9 @@ public class App
         FeatureReportAllCitiesByPopulation.generateReport(con);
     }
 
-    // ----------------------------------------------------------
-    //  BASIC POPULATION REPORTS
-    // ----------------------------------------------------------
+//     ----------------------------------------------------------
+//      BASIC POPULATION REPORTS
+//     ----------------------------------------------------------
 
     private void runBasicPopulationReportsInteractive(Scanner scanner)
     {
@@ -1492,8 +1500,8 @@ public class App
      */
     private void runAllReportsInteractive(Scanner scanner)
     {
-        runCapitalCityReportsInteractive(scanner);
         runCountryReportsInteractive(scanner);
+        runCapitalCityReportsInteractive(scanner);
         runCityReportsInteractive(scanner);
         runBasicPopulationReportsInteractive(scanner);
         runPolicyMakerReports();
@@ -1504,11 +1512,11 @@ public class App
      */
     private void runAllReportsNonInteractive()
     {
-        runCapitalCityReportsNonInteractive();
-        runCountryReportsNonInteractive();
-        runCityReportsNonInteractive();
-        runBasicPopulationReportsNonInteractive();
-        runPolicyMakerReportsNonInteractive();
+          // runCountryReportsNonInteractive();
+        // runCapitalCityReportsNonInteractive();
+//        runCityReportsNonInteractive();
+          //runBasicPopulationReportsNonInteractive();
+//        runPolicyMakerReportsNonInteractive();
     }
 
     // ----------------------------------------------------------
