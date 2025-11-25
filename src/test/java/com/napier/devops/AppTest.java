@@ -1,7 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.city_report.City;
-import com.napier.devops.country_report.Country;
+import com.napier.devops.capital_city_report.City;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;

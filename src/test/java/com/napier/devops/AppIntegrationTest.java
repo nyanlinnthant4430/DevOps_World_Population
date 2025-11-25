@@ -56,19 +56,6 @@ public class AppIntegrationTest {
         }
     }
 
-    // Helper to capture System.out to assert on ASCII table output
-    private String captureOutput(Runnable runnable) {
-        PrintStream original = System.out;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(baos));
-        try {
-            runnable.run();
-        } finally {
-            System.setOut(original);
-        }
-        return baos.toString();
-    }
-
     @Test
     void testRunAllReportsNonInteractiveViaReflection() throws Exception {
         Method m = App.class.getDeclaredMethod("runAllReportsNonInteractive");
@@ -86,37 +73,54 @@ public class AppIntegrationTest {
 
     @Test
     void testRunAllReportsInteractiveViaReflection() throws Exception {
-        // Build a big input string for ALL interactive prompts in this order:
+        // The actual order in runAllReportsInteractive is:
+        //  1) runCountryReportsInteractive(scanner)
+        //  2) runCapitalCityReportsInteractive(scanner)
+        //  3) runCityReportsInteractive(scanner)
+        //  4) runBasicPopulationReportsInteractive(scanner)
         //
-        // 1) Capital city reports:
-        //    continentAll, regionAll, nWorld, continentTop, nContinent, regionTop, nRegion
-        // 2) Country reports:
-        //    nWorld, continent, nContinent, region, nRegion
-        // 3) City reports:
-        //    continentAll, regionAll, countryAll, districtAll,
-        //    nWorld, topContinent, nContinent, topRegion, nRegion,
-        //    topCountry, nCountry, topDistrict, nDistrict
-        // 4) Basic population:
-        //    continent, region, country, district, city
-        //
+        // So we must feed input in EXACTLY that order.
+
         String input = String.join("\n",
-                // Capital city reports
+                // ==========================
+                // 1) Country reports
+                // ==========================
+                // New prompts (after refactor to mimic capital style):
+                //   continentAll
+                //   regionAll
+                //   nWorld
+                //   continentTop
+                //   nContinent
+                //   regionTop
+                //   nRegion
+                "Asia",             // continentAll
+                "Southeast Asia",   // regionAll
+                "10",               // nWorld (top countries in world)
+                "Asia",             // continentTop
+                "5",                // nContinent
+                "Southeast Asia",   // regionTop
+                "5",                // nRegion
+
+                // ==========================
+                // 2) Capital city reports
+                // ==========================
+                // Prompts:
+                //   continentAll, regionAll, nWorld, continentTop, nContinent, regionTop, nRegion
                 "Asia",             // continentAll
                 "Eastern Asia",     // regionAll
-                "5",                // nWorld
+                "5",                // nWorld (top capitals in world)
                 "Europe",           // continentTop
                 "3",                // nContinent
                 "Western Europe",   // regionTop
                 "2",                // nRegion
 
-                // Country reports
-                "10",               // nWorld
-                "Asia",             // continent
-                "5",                // nContinent
-                "Southeast Asia",   // region
-                "5",                // nRegion
-
-                // City reports
+                // ==========================
+                // 3) City reports
+                // ==========================
+                // Prompts:
+                //   continentAll, regionAll, countryAll, districtAll,
+                //   nWorld, topContinent, nContinent, topRegion, nRegion,
+                //   topCountry, nCountry, topDistrict, nDistrict
                 "Asia",             // continentAll
                 "Southeast Asia",   // regionAll
                 "Myanmar",          // countryAll
@@ -131,7 +135,11 @@ public class AppIntegrationTest {
                 "Yangon",           // topDistrict
                 "5",                // nDistrict
 
-                // Basic population
+                // ==========================
+                // 4) Basic population reports
+                // ==========================
+                // Prompts:
+                //   continent, region, country, district, city
                 "Asia",             // continent
                 "Southeast Asia",   // region
                 "Myanmar",          // country
@@ -146,13 +154,15 @@ public class AppIntegrationTest {
         m.setAccessible(true);
 
         // This will transitively exercise:
-        //  - runCapitalCityReportsInteractive
         //  - runCountryReportsInteractive
+        //  - runCapitalCityReportsInteractive
         //  - runCityReportsInteractive
         //  - runBasicPopulationReportsInteractive
         //  - runPolicyMakerReports
         m.invoke(app, scanner);
     }
+
+
 
     @Test
     void testMainNonInteractiveDockerLikeMode() {
