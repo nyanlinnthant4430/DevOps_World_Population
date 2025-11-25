@@ -33,7 +33,7 @@ public class ReportAllCapitalCitiesByPopulation {
             table.addRow("City", "Country", "Continent", "Region", "Population");
             table.addRule();
 
-               for (City c : cities) {
+            for (City c : cities) {
                 table.addRow(c.getName(), c.getCountry(), c.getContinent(), c.getRegion(), String.format("%,d", c.getPopulation()));
                 table.addRule();
             }

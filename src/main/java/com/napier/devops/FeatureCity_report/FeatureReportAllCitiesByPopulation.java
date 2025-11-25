@@ -1,10 +1,10 @@
-package com.napier.devops.city_report;
+package com.napier.devops.FeatureCity_report;
 
 import java.sql.*;
 import java.util.LinkedList;
 import de.vandermeer.asciitable.AsciiTable;
 
-public class ReportAllCitiesByPopulation {
+public class FeatureReportAllCitiesByPopulation {
     public static void generateReport(Connection con) {
         try {
             Statement stmt = con.createStatement();
@@ -14,9 +14,9 @@ public class ReportAllCitiesByPopulation {
                             "ORDER BY city.Population DESC;"
             );
 
-            LinkedList<City> cities = new LinkedList<>();
+            LinkedList<FeatureCity> cities = new LinkedList<>();
             while (rset.next()) {
-                City c = new City();
+                FeatureCity c = new FeatureCity();
                 c.id = rset.getInt("ID");
                 c.name = rset.getString("Name");
                 c.country = rset.getString("Country");
@@ -31,13 +31,13 @@ public class ReportAllCitiesByPopulation {
         }
     }
 
-    private static void printCities(LinkedList<City> cities) {
+    private static void printCities(LinkedList<FeatureCity> cities) {
         AsciiTable table = new AsciiTable();
         table.addRule();
         table.addRow("ID", "City", "Country", "District", "Population");
         table.addRule();
 
-        for (City c : cities) {
+        for (FeatureCity c : cities) {
             table.addRow(c.id, c.name, c.country, c.district, c.population);
             table.addRule();
         }
