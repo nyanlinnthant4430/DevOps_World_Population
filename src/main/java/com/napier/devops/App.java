@@ -1477,6 +1477,7 @@ public class App {
         runCityReportsNonInteractive();
         runBasicPopulationReportsNonInteractive();
         runPolicyMakerReportsNonInteractive();
+
     }
 
     // ----------------------------------------------------------
