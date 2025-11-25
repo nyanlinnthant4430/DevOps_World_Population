@@ -2,28 +2,34 @@ package com.napier.devops.basicpopulation;
 
 /**
  * Represents the population of people who speak a specific language.
-
+ * <p>
  * Required languages for the report:
- *   - Chinese
- *   - English
- *   - Hindi
- *   - Spanish
- *   - Arabic
-
+ * - Chinese
+ * - English
+ * - Hindi
+ * - Spanish
+ * - Arabic
+ * <p>
  * Each object stores:
- *   - the name of the language
- *   - number of speakers
- *   - percentage of the world population
+ * - the name of the language
+ * - number of speakers
+ * - percentage of the world population
  */
 public class LanguagePopulation {
 
-    /** Language name (e.g. "Chinese", "English"). */
+    /**
+     * Language name (e.g. "Chinese", "English").
+     */
     private String language;
 
-    /** Number of speakers worldwide. */
+    /**
+     * Number of speakers worldwide.
+     */
     private long speakers;
 
-    /** Percentage of world population who speak this language. */
+    /**
+     * Percentage of world population who speak this language.
+     */
     private double percentageOfWorld;
 
     // ===== Constructors =====

@@ -12,7 +12,8 @@ public class City {
     private int population;
 
     // Constructors
-    public City() {}
+    public City() {
+    }
 
     // Existing constructor (no district) – kept for backwards compatibility
     public City(String name, String country, String continent, String region, int population) {
@@ -38,6 +39,7 @@ public class City {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -45,6 +47,7 @@ public class City {
     public String getCountry() {
         return country;
     }
+
     public void setCountry(String country) {
         this.country = country;
     }
@@ -59,6 +62,7 @@ public class City {
     public String getContinent() {
         return continent;
     }
+
     public void setContinent(String continent) {
         this.continent = continent;
     }
@@ -66,6 +70,7 @@ public class City {
     public String getRegion() {
         return region;
     }
+
     public void setRegion(String region) {
         this.region = region;
     }
@@ -73,6 +78,7 @@ public class City {
     public String getDistrict() {
         return district;
     }
+
     public void setDistrict(String district) {
         this.district = district;
     }
@@ -80,6 +86,7 @@ public class City {
     public int getPopulation() {
         return population;
     }
+
     public void setPopulation(int population) {
         this.population = population;
     }

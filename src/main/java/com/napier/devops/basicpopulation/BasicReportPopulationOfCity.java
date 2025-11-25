@@ -6,18 +6,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class BasicReportPopulationOfCity
-{
-    public static void generateReport(Connection con, String city)
-    {
+public class BasicReportPopulationOfCity {
+    public static void generateReport(Connection con, String city) {
         String sql = """
                 SELECT Name, Population
                 FROM city
                 WHERE Name = ?;
                 """;
 
-        try (PreparedStatement stmt = con.prepareStatement(sql))
-        {
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, city);
             ResultSet rset = stmt.executeQuery();
 
@@ -26,24 +23,19 @@ public class BasicReportPopulationOfCity
             table.addRow("City", "Population");
             table.addRule();
 
-            if (rset.next())
-            {
+            if (rset.next()) {
                 Population p = new Population();
                 p.setName(rset.getString("Name"));
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            }
-            else
-            {
+            } else {
                 table.addRow(city, "No data");
             }
 
             table.addRule();
             System.out.println(table.render());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Error generating city population report: " + e.getMessage());
         }
     }

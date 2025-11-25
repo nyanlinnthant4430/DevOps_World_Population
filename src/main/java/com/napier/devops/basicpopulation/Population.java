@@ -2,47 +2,57 @@ package com.napier.devops.basicpopulation;
 
 /**
  * Represents a population record for:
- *  - the world
- *  - a continent
- *  - a region
- *  - a country
- *  - a district
- *  - a city
-
+ * - the world
+ * - a continent
+ * - a region
+ * - a country
+ * - a district
+ * - a city
+ * <p>
  * It stores:
- *  - the name (e.g. "World", "Asia", "Western Europe", "Myanmar", "Yangon", "Hlaing")
- *  - the total population
- *  - the population living in cities
- *  - the population not living in cities
- *  - the percentage of people living in cities
- *  - the percentage of people not living in cities
+ * - the name (e.g. "World", "Asia", "Western Europe", "Myanmar", "Yangon", "Hlaing")
+ * - the total population
+ * - the population living in cities
+ * - the population not living in cities
+ * - the percentage of people living in cities
+ * - the percentage of people not living in cities
  */
 public class Population {
 
     /**
      * Name of the geographical unit:
-     *  - "World"
-     *  - continent name
-     *  - region name
-     *  - country name
-     *  - district name
-     *  - city name
+     * - "World"
+     * - continent name
+     * - region name
+     * - country name
+     * - district name
+     * - city name
      */
     private String name;
 
-    /** Total population of this world/continent/region/country/district/city. */
+    /**
+     * Total population of this world/continent/region/country/district/city.
+     */
     private long totalPopulation;
 
-    /** Number of people living in cities within this unit. */
+    /**
+     * Number of people living in cities within this unit.
+     */
     private long cityPopulation;
 
-    /** Number of people NOT living in cities within this unit. */
+    /**
+     * Number of people NOT living in cities within this unit.
+     */
     private long nonCityPopulation;
 
-    /** Percentage of the total population living in cities. */
+    /**
+     * Percentage of the total population living in cities.
+     */
     private double cityPercentage;
 
-    /** Percentage of the total population not living in cities. */
+    /**
+     * Percentage of the total population not living in cities.
+     */
     private double nonCityPercentage;
 
     // ===== Constructors =====

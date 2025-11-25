@@ -17,12 +17,12 @@ import java.util.Scanner;
 
 /**
  * Unified application that runs:
- *  - Capital city reports
- *  - Country reports
- *  - City reports (feature)
- *  - Basic population reports
- *  - Policymaker reports
- *  Single App.java, single connection, no menu.
+ * - Capital city reports
+ * - Country reports
+ * - City reports (feature)
+ * - Basic population reports
+ * - Policymaker reports
+ * Single App.java, single connection, no menu.
  */
 public class App {
     /**
@@ -37,8 +37,8 @@ public class App {
     /**
      * Connects to the MySQL database with retry logic.
      * Examples:
-     *  - Local run (IntelliJ): connect("localhost:33060", 0)
-     *  - Docker / CI:         connect("db:3306", 30000)
+     * - Local run (IntelliJ): connect("localhost:33060", 0)
+     * - Docker / CI:         connect("db:3306", 30000)
      *
      * @param location host:port
      * @param delay    delay in milliseconds before first attempt (useful in CI)
@@ -174,8 +174,7 @@ public class App {
     //  COUNTRY REPORTS
     // ----------------------------------------------------------
 
-    private void runCountryReportsInteractive(Scanner scanner)
-    {
+    private void runCountryReportsInteractive(Scanner scanner) {
         System.out.println("\n===== COUNTRY REPORTS =====");
 
         // 1. All countries in the world by population
@@ -215,8 +214,6 @@ public class App {
 
         System.out.println("\nAll 6 country reports have been generated.");
     }
-
-
 
 
     private void runCountryReportsNonInteractive() {
@@ -552,8 +549,8 @@ public class App {
     /**
      * Application entry point.
      * Behaviour:
-     *  - Local run (IntelliJ): no args → connect to localhost:33060 and run all reports interactively.
-     *  - Docker / CI: args[0] = host:port, args[1] = delayMs → non-interactive subset of reports.
+     * - Local run (IntelliJ): no args → connect to localhost:33060 and run all reports interactively.
+     * - Docker / CI: args[0] = host:port, args[1] = delayMs → non-interactive subset of reports.
      */
     public static void main(String[] args) {
         App app = new App();

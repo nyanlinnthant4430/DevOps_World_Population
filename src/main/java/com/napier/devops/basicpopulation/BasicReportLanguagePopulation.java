@@ -7,32 +7,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class BasicReportLanguagePopulation
-{
-    public static void generateReport(Connection con)
-    {
-        if (con == null)
-        {
+public class BasicReportLanguagePopulation {
+    public static void generateReport(Connection con) {
+        if (con == null) {
             System.out.println("No database connection.");
             return;
         }
 
-        try
-        {
+        try {
             long worldPopulation = 0;
 
             // Get world population
             try (Statement stmt = con.createStatement();
-                 ResultSet rset = stmt.executeQuery("SELECT SUM(Population) AS Population FROM country"))
-            {
-                if (rset.next())
-                {
+                 ResultSet rset = stmt.executeQuery("SELECT SUM(Population) AS Population FROM country")) {
+                if (rset.next()) {
                     worldPopulation = rset.getLong("Population");
                 }
             }
 
-            if (worldPopulation == 0)
-            {
+            if (worldPopulation == 0) {
                 System.out.println("World population could not be calculated.");
                 return;
             }
@@ -49,15 +42,13 @@ public class BasicReportLanguagePopulation
                     """;
 
             try (PreparedStatement stmt = con.prepareStatement(sql);
-                 ResultSet rset = stmt.executeQuery())
-            {
+                 ResultSet rset = stmt.executeQuery()) {
                 AsciiTable table = new AsciiTable();
                 table.addRule();
                 table.addRow("Language", "Speakers", "% of World Population");
                 table.addRule();
 
-                while (rset.next())
-                {
+                while (rset.next()) {
                     LanguagePopulation lp = new LanguagePopulation();
 
                     lp.setLanguage(rset.getString("Language"));
@@ -76,9 +67,7 @@ public class BasicReportLanguagePopulation
 
                 System.out.println(table.render());
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Error generating language population report: " + e.getMessage());
         }
     }
