@@ -28,14 +28,18 @@ public class BasicReportPopulationOfCity
 
             if (rset.next())
             {
-                table.addRow(rset.getString("Name"), rset.getLong("Population"));
+                Population p = new Population();
+                p.setName(rset.getString("Name"));
+                p.setTotalPopulation(rset.getLong("Population"));
+
+                table.addRow(p.getName(), p.getTotalPopulation());
             }
             else
             {
                 table.addRow(city, "No data");
             }
-            table.addRule();
 
+            table.addRule();
             System.out.println(table.render());
         }
         catch (Exception e)

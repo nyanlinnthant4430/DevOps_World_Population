@@ -1,7 +1,6 @@
 package com.napier.devops;
 
-import com.napier.devops.city_report.City;
-import com.napier.devops.country_report.Country;
+import com.napier.devops.capital_city_report.City;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -59,37 +58,40 @@ public class AppTest {
         App.printCities(list);
     }
 
-//    @Test
-//    void testAskForPositiveIntValidFirstTime() throws Exception {
-//        App app = new App();
-//        // Provide a simple valid integer "5"
-//        String input = "5\n";
-//        Scanner scanner = new Scanner(input);
-//
-//        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
-//        m.setAccessible(true);
-//
-//        Object result = m.invoke(app, scanner);
-//        assertTrue(result instanceof Integer);
-//        assertEquals(5, (int) result);
-//    }
+    @Test
+    void testAskForPositiveIntValidFirstTime() throws Exception {
+        App app = new App();
+        // Provide a simple valid integer "5"
+        String input = "5\n";
+        Scanner scanner = new Scanner(input);
 
-//    @Test
-//    void testAskForPositiveIntWithInvalidThenValid() throws Exception {
-//        App app = new App();
-//        // Sequence:
-//        //  - 0       (invalid: <= 0)
-//        //  - -3      (invalid: <= 0)
-//        //  - abc     (invalid: not a number)
-//        //  - 10      (valid)
-//        String input = "0\n-3\nabc\n10\n";
-//        Scanner scanner = new Scanner(input);
-//
-//        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class);
-//        m.setAccessible(true);
-//
-//        Object result = m.invoke(app, scanner);
-//        assertTrue(result instanceof Integer);
-//        assertEquals(10, (int) result);
-//    }
+        // Method signature: (Scanner, String)
+        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class, String.class);
+        m.setAccessible(true);
+
+        Object result = m.invoke(app, scanner, "Enter N: ");
+        assertInstanceOf(Integer.class, result);
+        assertEquals(5, (int) result);
+    }
+
+    @Test
+    void testAskForPositiveIntWithInvalidThenValid() throws Exception {
+        App app = new App();
+        // Sequence:
+        //  - 0       (invalid: <= 0)
+        //  - -3      (invalid: <= 0)
+        //  - abc     (invalid: not a number)
+        //  - 10      (valid)
+        String input = "0\n-3\nabc\n10\n";
+        Scanner scanner = new Scanner(input);
+
+        // Method signature: (Scanner, String)
+        Method m = App.class.getDeclaredMethod("askForPositiveInt", Scanner.class, String.class);
+        m.setAccessible(true);
+
+        Object result = m.invoke(app, scanner, "Enter N: ");
+        assertInstanceOf(Integer.class, result);
+        assertEquals(10, (int) result);
+    }
+
 }

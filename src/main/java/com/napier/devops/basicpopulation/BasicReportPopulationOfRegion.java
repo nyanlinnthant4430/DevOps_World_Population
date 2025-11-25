@@ -1,5 +1,6 @@
 package com.napier.devops.basicpopulation;
 
+import com.napier.devops.basicpopulation.Population;
 import de.vandermeer.asciitable.AsciiTable;
 
 import java.sql.Connection;
@@ -29,15 +30,18 @@ public class BasicReportPopulationOfRegion
 
             if (rset.next())
             {
-                long population = rset.getLong("Population");
-                table.addRow(rset.getString("Region"), population);
+                Population p = new Population();
+                p.setName(rset.getString("Region"));
+                p.setTotalPopulation(rset.getLong("Population"));
+
+                table.addRow(p.getName(), p.getTotalPopulation());
             }
             else
             {
                 table.addRow(region, "No data");
             }
-            table.addRule();
 
+            table.addRule();
             System.out.println(table.render());
         }
         catch (Exception e)

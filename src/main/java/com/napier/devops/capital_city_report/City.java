@@ -1,4 +1,4 @@
-package com.napier.devops.city_report;
+package com.napier.devops.capital_city_report;
 
 /**
  * Represents a city, including its name, country, continent, region, district, and population.
