@@ -252,4 +252,4 @@ Following these steps ensures **smooth collaboration, high-quality code, and suc
 
 ## Code of Conduct
 
-Please review our [Code of Conduct](CODE_OF_CONDUCT.md) to familiarize with the standards and expectations for not only team collaboration but also communication.
+Please review our [Code of Conduct](Code_of_Conduct.md) to familiarize with the standards and expectations for not only team collaboration but also communication.
