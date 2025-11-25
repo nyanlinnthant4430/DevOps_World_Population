@@ -7,10 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class BasicReportPopulationOfRegion
-{
-    public static void generateReport(Connection con, String region)
-    {
+public class BasicReportPopulationOfRegion {
+    public static void generateReport(Connection con, String region) {
         String sql = """
                 SELECT Region, SUM(Population) AS Population
                 FROM country
@@ -18,8 +16,7 @@ public class BasicReportPopulationOfRegion
                 GROUP BY Region;
                 """;
 
-        try (PreparedStatement stmt = con.prepareStatement(sql))
-        {
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, region);
             ResultSet rset = stmt.executeQuery();
 
@@ -28,24 +25,19 @@ public class BasicReportPopulationOfRegion
             table.addRow("Region", "Population");
             table.addRule();
 
-            if (rset.next())
-            {
+            if (rset.next()) {
                 Population p = new Population();
                 p.setName(rset.getString("Region"));
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            }
-            else
-            {
+            } else {
                 table.addRow(region, "No data");
             }
 
             table.addRule();
             System.out.println(table.render());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Error generating region population report: " + e.getMessage());
         }
     }

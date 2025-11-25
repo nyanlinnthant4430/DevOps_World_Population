@@ -3,15 +3,14 @@ package com.napier.devops.country_report;
 /**
  * Represents a country record used in country reports.
  * Required fields:
- *  - Code
- *  - Name
- *  - Continent
- *  - Region
- *  - Population
- *  - Capital
+ * - Code
+ * - Name
+ * - Continent
+ * - Region
+ * - Population
+ * - Capital
  */
-public class Country
-{
+public class Country {
     // Country code (e.g., USA, GBR)
     private String code;
 
@@ -33,14 +32,14 @@ public class Country
     /**
      * Default constructor.
      */
-    public Country() { }
+    public Country() {
+    }
 
     /**
      * Backwards-compatible constructor (old version without code/capital).
      * Only use this if some old code still calls it.
      */
-    public Country(String name, String continent, String region, int population)
-    {
+    public Country(String name, String continent, String region, int population) {
         this.name = name;
         this.continent = continent;
         this.region = region;
@@ -62,8 +61,7 @@ public class Country
                    String continent,
                    String region,
                    int population,
-                   String capital)
-    {
+                   String capital) {
         this.code = code;
         this.name = name;
         this.continent = continent;
@@ -74,29 +72,53 @@ public class Country
 
     // ===== Getters =====
 
-    public String getCode() { return code; }
+    public String getCode() {
+        return code;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getContinent() { return continent; }
+    public String getContinent() {
+        return continent;
+    }
 
-    public String getRegion() { return region; }
+    public String getRegion() {
+        return region;
+    }
 
-    public int getPopulation() { return population; }
+    public int getPopulation() {
+        return population;
+    }
 
-    public String getCapital() { return capital; }
+    public String getCapital() {
+        return capital;
+    }
 
     // ===== Setters =====
 
-    public void setCode(String code) { this.code = code; }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public void setContinent(String continent) { this.continent = continent; }
+    public void setContinent(String continent) {
+        this.continent = continent;
+    }
 
-    public void setRegion(String region) { this.region = region; }
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
-    public void setPopulation(int population) { this.population = population; }
+    public void setPopulation(int population) {
+        this.population = population;
+    }
 
-    public void setCapital(String capital) { this.capital = capital; }
+    public void setCapital(String capital) {
+        this.capital = capital;
+    }
 }

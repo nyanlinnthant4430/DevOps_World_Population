@@ -2,6 +2,7 @@ package com.napier.devops.capital_city_report;
 
 import java.sql.*;
 import java.util.LinkedList;
+
 import de.vandermeer.asciitable.AsciiTable;
 
 public class ReportCapitalCitiesByRegion {
