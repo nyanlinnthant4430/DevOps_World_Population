@@ -1,14 +1,20 @@
 package com.napier.devops.basicpopulation;
 
-import com.napier.devops.basicpopulation.Population;
 import de.vandermeer.asciitable.AsciiTable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportPopulationOfRegion {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportPopulationOfRegion.class.getName());
+
     public static void generateReport(Connection con, String region) {
+
         String sql = """
                 SELECT Region, SUM(Population) AS Population
                 FROM country
@@ -31,14 +37,20 @@ public class BasicReportPopulationOfRegion {
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            } else {
+            }
+            else {
                 table.addRow(region, "No data");
             }
 
             table.addRule();
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating region population report: " + e.getMessage());
+
+            // Avoid GuardLogStatement: build string separately
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating region population report", e);
         }
     }
 }

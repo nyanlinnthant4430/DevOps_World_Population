@@ -5,13 +5,20 @@ import de.vandermeer.asciitable.AsciiTable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportPopulationOfCity {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportPopulationOfCity.class.getName());
+
     public static void generateReport(Connection con, String city) {
+
         String sql = """
                 SELECT Name, Population
                 FROM city
-                WHERE Name = ?;
+                WHERE Name = ?
                 """;
 
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -29,14 +36,20 @@ public class BasicReportPopulationOfCity {
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            } else {
+            }
+            else {
                 table.addRow(city, "No data");
             }
 
             table.addRule();
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating city population report: " + e.getMessage());
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info(table.render());
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating city population report", e);
         }
     }
 }

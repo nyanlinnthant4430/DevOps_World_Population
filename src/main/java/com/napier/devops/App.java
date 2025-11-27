@@ -11,9 +11,10 @@ import com.napier.devops.capital_city_report.City;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Unified application that runs:
@@ -25,6 +26,12 @@ import java.util.Scanner;
  * Single App.java, single connection, no menu.
  */
 public class App {
+
+    /**
+     * Logger instance for this class.
+     */
+    public static final Logger LOGGER = Logger.getLogger(App.class.getName());
+
     /**
      * Active database connection to the MySQL {@code world} database.
      */
@@ -64,14 +71,16 @@ public class App {
                         "example"
                 );
 
-                System.out.println("Connected to database successfully at: " + location);
+                LOGGER.log(Level.INFO, "Connected to database successfully at: {0}", location);
                 break;
             } catch (Exception e) {
-                System.out.println("Waiting for database to be ready... (" + retries + " retries left)");
+                LOGGER.log(Level.WARNING,
+                        "Waiting for database to be ready... ({0} retries left)", retries);
                 retries--;
 
                 if (retries == 0) {
-                    System.out.println("FATAL ERROR: Could not connect to database at " + location);
+                    LOGGER.log(Level.SEVERE,
+                            "FATAL ERROR: Could not connect to database at {0}", location);
                     System.exit(-1);
                 }
 
@@ -99,10 +108,10 @@ public class App {
         try {
             if (con != null) {
                 con.close();
-                System.out.println("Disconnected from database.");
+                LOGGER.info("Disconnected from database.");
             }
         } catch (Exception e) {
-            System.out.println("Error closing connection: " + e.getMessage());
+            LOGGER.log(Level.WARNING, "Error closing connection", e);
         }
     }
 
@@ -126,310 +135,408 @@ public class App {
 
     public static void printCountries(ArrayList<Country> countries) {
         if (countries == null) {
-            System.out.println("No countries");
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info("No countries");
+            }
             return;
         }
 
-        System.out.println(String.format(
-                "%-30s %-15s %-25s %-15s",
-                "Country Name", "Continent", "Region", "Population"));
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info(String.format(
+                    "%-30s %-15s %-25s %-15s",
+                    "Country Name", "Continent", "Region", "Population"));
 
-        for (Country c : countries) {
-            if (c == null)
-                continue;
+            for (Country c : countries) {
+                if (c == null) {
+                    continue;
+                }
 
-            String countryString = String.format(
-                    "%-30s %-15s %-25s %-15d",
-                    c.getName(), c.getContinent(), c.getRegion(), c.getPopulation()
-            );
-
-            System.out.println(countryString);
+                String countryString = String.format(
+                        "%-30s %-15s %-25s %-15d",
+                        c.getName(), c.getContinent(), c.getRegion(), c.getPopulation()
+                );
+                LOGGER.info(countryString);
+            }
         }
     }
+
 
     public static void printCities(ArrayList<City> cities) {
         if (cities == null) {
-            System.out.println("No cities");
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info("No cities");
+            }
             return;
         }
 
-        System.out.println(String.format(
-                "%-30s %-25s %-25s %-15s",
-                "City Name", "Country", "District", "Population"));
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info(String.format(
+                    "%-30s %-25s %-25s %-15s",
+                    "City Name", "Country", "District", "Population"));
 
-        for (City c : cities) {
-            if (c == null)
-                continue;
+            for (City c : cities) {
+                if (c == null) {
+                    continue;
+                }
 
-            String cityString = String.format(
-                    "%-30s %-25s %-25s %-15d",
-                    c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation()
-            );
-
-            System.out.println(cityString);
+                String cityString = String.format(
+                        "%-30s %-25s %-25s %-15d",
+                        c.getName(), c.getCountryName(), c.getDistrict(), c.getPopulation()
+                );
+                LOGGER.info(cityString);
+            }
         }
     }
+
 
     // ----------------------------------------------------------
     //  COUNTRY REPORTS
     // ----------------------------------------------------------
 
     private void runCountryReportsInteractive(Scanner scanner) {
-        System.out.println("\n===== COUNTRY REPORTS =====");
+        LOGGER.info("\n===== COUNTRY REPORTS =====");
 
         // 1. All countries in the world by population
-        System.out.println("\n===== 1. All countries in the WORLD by population =====");
+        LOGGER.info("\n===== 1. All countries in the WORLD by population =====");
         ReportAllCountriesByPopulation.generateReport(con);
 
         // 2. All countries in a continent by population
-        System.out.println("\n===== 2. All countries in a CONTINENT by population =====");
-        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        LOGGER.info("\n===== 2. All countries in a CONTINENT by population =====");
+        LOGGER.info("Enter continent name (e.g., Asia, Europe): ");
         String continentAll = scanner.nextLine().trim();
         ReportCountriesByContinent.generateReport(con, continentAll);
 
         // 3. All countries in a region by population
-        System.out.println("\n===== 3. All countries in a REGION by population =====");
-        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        LOGGER.info("\n===== 3. All countries in a REGION by population =====");
+        LOGGER.info("Enter region name (e.g., Eastern Asia, Western Europe): ");
         String regionAll = scanner.nextLine().trim();
         ReportCountriesByRegion.generateReport(con, regionAll);
 
         // 4. Top N countries in the world
-        System.out.println("\n===== 4. Top N countries in the WORLD by population =====");
+        LOGGER.info("\n===== 4. Top N countries in the WORLD by population =====");
         int nWorld = askForPositiveInt(scanner, "Enter N for top countries in the WORLD: ");
         ReportTopNCountriesWorld.generateReport(con, nWorld);
 
         // 5. Top N countries in a continent
-        System.out.println("\n===== 5. Top N countries in a CONTINENT by population =====");
-        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        LOGGER.info("\n===== 5. Top N countries in a CONTINENT by population =====");
+        LOGGER.info("Enter continent name (e.g., Asia, Europe): ");
         String continentTop = scanner.nextLine().trim();
         int nContinent = askForPositiveInt(scanner, "Enter N for top countries in this CONTINENT: ");
         ReportTopNCountriesContinent.generateReport(con, continentTop, nContinent);
 
         // 6. Top N countries in a region
-        System.out.println("\n===== 6. Top N countries in a REGION by population =====");
-        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        LOGGER.info("\n===== 6. Top N countries in a REGION by population =====");
+        LOGGER.info("Enter region name (e.g., Eastern Asia, Western Europe): ");
         String regionTop = scanner.nextLine().trim();
         int nRegion = askForPositiveInt(scanner, "Enter N for top countries in this REGION: ");
         ReportTopNCountriesRegion.generateReport(con, regionTop, nRegion);
 
-        System.out.println("\nAll 6 country reports have been generated.");
+        LOGGER.info("\nAll 6 country reports have been generated.");
     }
 
-
     private void runCountryReportsNonInteractive() {
-        System.out.println("\n===== COUNTRY REPORTS (Non-interactive) =====");
-
         String continent = "Asia";
         String region = "Southeast Asia";
         int nWorld = 10;
         int nContinent = 5;
         int nRegion = 5;
 
-        System.out.println("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\n===== COUNTRY REPORTS (Non-interactive) =====");
+
+            LOGGER.info("\n=== Report 1: All countries in the world by population (largest to smallest) ===");
+            LOGGER.log(Level.INFO,
+                    "\n=== Report 2: All countries in continent {0} by population ===",
+                    continent);
+            LOGGER.log(Level.INFO,
+                    "\n=== Report 3: All countries in region {0} by population ===",
+                    region);
+            LOGGER.log(Level.INFO,
+                    "\n=== Report 4: Top {0} populated countries in the world ===",
+                    nWorld);
+            LOGGER.log(Level.INFO,
+                    "\n=== Report 5: Top {0} populated countries in continent {1} ===",
+                    new Object[]{nContinent, continent});
+            LOGGER.log(Level.INFO,
+                    "\n=== Report 6: Top {0} populated countries in region {1} ===",
+                    new Object[]{nRegion, region});
+        }
+
+        // actual report logic (no logging inside guard)
         ReportAllCountriesByPopulation.generateReport(con);
-
-        System.out.println("\n=== Report 2: All countries in continent '" + continent + "' by population ===");
         ReportCountriesByContinent.generateReport(con, continent);
-
-        System.out.println("\n=== Report 3: All countries in region '" + region + "' by population ===");
         ReportCountriesByRegion.generateReport(con, region);
-
-        System.out.println("\n=== Report 4: Top " + nWorld + " populated countries in the world ===");
         ReportTopNCountriesWorld.generateReport(con, nWorld);
-
-        System.out.println("\n=== Report 5: Top " + nContinent + " populated countries in continent '" + continent + "' ===");
         ReportTopNCountriesContinent.generateReport(con, continent, nContinent);
-
-        System.out.println("\n=== Report 6: Top " + nRegion + " populated countries in region '" + region + "' ===");
         ReportTopNCountriesRegion.generateReport(con, region, nRegion);
     }
 
-//     ----------------------------------------------------------
-//      CAPITAL CITY REPORTS
-//     ----------------------------------------------------------
+
+    // ----------------------------------------------------------
+    //  CAPITAL CITY REPORTS
+    // ----------------------------------------------------------
 
     private void runCapitalCityReportsInteractive(Scanner scanner) {
-        System.out.println("\n===== CAPITAL CITY REPORTS =====");
+        LOGGER.info("\n===== CAPITAL CITY REPORTS =====");
 
         // 1. All capital cities in the world by population
-        System.out.println("\n===== 1. All capital cities in the WORLD by population =====");
+        LOGGER.info("\n===== 1. All capital cities in the WORLD by population =====");
         ReportAllCapitalCitiesByPopulation.generateReport(con);
 
         // 2. All capital cities in a continent by population
-        System.out.println("\n===== 2. All capital cities in a CONTINENT by population =====");
-        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        LOGGER.info("\n===== 2. All capital cities in a CONTINENT by population =====");
+        LOGGER.info("Enter continent name (e.g., Asia, Europe): ");
         String continentAll = scanner.nextLine().trim();
         ReportCapitalCitiesByContinent.generateReport(con, continentAll);
 
         // 3. All capital cities in a region by population
-        System.out.println("\n===== 3. All capital cities in a REGION by population =====");
-        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        LOGGER.info("\n===== 3. All capital cities in a REGION by population =====");
+        LOGGER.info("Enter region name (e.g., Eastern Asia, Western Europe): ");
         String regionAll = scanner.nextLine().trim();
         ReportCapitalCitiesByRegion.generateReport(con, regionAll);
 
         // 4. Top N capital cities in the world
-        System.out.println("\n===== 4. Top N capital cities in the WORLD by population =====");
+        LOGGER.info("\n===== 4. Top N capital cities in the WORLD by population =====");
         int nWorld = askForPositiveInt(scanner, "Enter N for top capital cities in the WORLD: ");
         ReportTopNCapitalCitiesWorld.generateReport(con, nWorld);
 
         // 5. Top N capital cities in a continent
-        System.out.println("\n===== 5. Top N capital cities in a CONTINENT by population =====");
-        System.out.print("Enter continent name (e.g., Asia, Europe): ");
+        LOGGER.info("\n===== 5. Top N capital cities in a CONTINENT by population =====");
+        LOGGER.info("Enter continent name (e.g., Asia, Europe): ");
         String continentTop = scanner.nextLine().trim();
         int nContinent = askForPositiveInt(scanner, "Enter N for top capital cities in this CONTINENT: ");
         ReportTopNCapitalCitiesContinent.generateReport(con, continentTop, nContinent);
 
         // 6. Top N capital cities in a region
-        System.out.println("\n===== 6. Top N capital cities in a REGION by population =====");
-        System.out.print("Enter region name (e.g., Eastern Asia, Western Europe): ");
+        LOGGER.info("\n===== 6. Top N capital cities in a REGION by population =====");
+        LOGGER.info("Enter region name (e.g., Eastern Asia, Western Europe): ");
         String regionTop = scanner.nextLine().trim();
         int nRegion = askForPositiveInt(scanner, "Enter N for top capital cities in this REGION: ");
         ReportTopNCapitalCitiesRegion.generateReport(con, regionTop, nRegion);
 
-        System.out.println("\nAll 6 capital city reports have been generated.");
+        LOGGER.info("\nAll 6 capital city reports have been generated.");
     }
 
     private void runCapitalCityReportsNonInteractive() {
-        System.out.println("\n===== CAPITAL CITY REPORTS (Non-interactive) =====");
+        LOGGER.info("\n===== CAPITAL CITY REPORTS (Non-interactive) =====");
         // Minimal subset for CI – no input required
         ReportAllCapitalCitiesByPopulation.generateReport(con);
     }
 
-
-//
-//     ----------------------------------------------------------
-//      CITY REPORTS (FeatureCity_report)
-//     ----------------------------------------------------------
+    // ----------------------------------------------------------
+    //  CITY REPORTS (FeatureCity_report)
+    // ----------------------------------------------------------
 
     private void runCityReportsInteractive(Scanner scanner) {
-        System.out.println("\n===== CITY REPORTS =====");
-
-        // 1. All cities in the world
-        System.out.println("\n=== 1. All cities in the WORLD by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\n===== CITY REPORTS =====");
+            LOGGER.info("\n=== 1. All cities in the WORLD by population ===");
+        }
         FeatureReportAllCitiesByPopulation.generateReport(con);
 
         // 2. All cities in a continent
-        System.out.print("\nEnter Continent Name for ALL cities by population: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Continent Name for ALL cities by population: ");
+        }
         String continentAll = scanner.nextLine();
-        System.out.println("\n=== 2. All cities in continent '" + continentAll + "' by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 2. All cities in continent {0} by population ===",
+                    continentAll);
+        }
         FeatureReportCitiesByContinent.generateReport(con, continentAll);
 
         // 3. All cities in a region
-        System.out.print("\nEnter Region Name for ALL cities by population: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Region Name for ALL cities by population: ");
+        }
         String regionAll = scanner.nextLine();
-        System.out.println("\n=== 3. All cities in region '" + regionAll + "' by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 3. All cities in region {0} by population ===",
+                    regionAll);
+        }
         FeatureReportCitiesByRegion.generateReport(con, regionAll);
 
         // 4. All cities in a country
-        System.out.print("\nEnter Country Name for ALL cities by population: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Country Name for ALL cities by population: ");
+        }
         String countryAll = scanner.nextLine();
-        System.out.println("\n=== 4. All cities in country '" + countryAll + "' by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 4. All cities in country {0} by population ===",
+                    countryAll);
+        }
         FeatureReportCitiesByCountry.generateReport(con, countryAll);
 
         // 5. All cities in a district
-        System.out.print("\nEnter District Name for ALL cities by population: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter District Name for ALL cities by population: ");
+        }
         String districtAll = scanner.nextLine();
-        System.out.println("\n=== 5. All cities in district '" + districtAll + "' by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 5. All cities in district {0} by population ===",
+                    districtAll);
+        }
         FeatureReportCitiesByDistrict.generateReport(con, districtAll);
 
         // 6. Top N cities in the world
-        System.out.print("\nEnter N for TOP N cities in the WORLD: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter N for TOP N cities in the WORLD: ");
+        }
         int nWorld = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("\n=== 6. Top " + nWorld + " cities in the WORLD by population ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 6. Top {0} cities in the WORLD by population ===",
+                    nWorld);
+        }
         FeatureReportTopNCitiesWorld.generateReport(con, nWorld);
 
         // 7. Top N cities in a continent
-        System.out.print("\nEnter Continent for TOP N cities: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Continent for TOP N cities: ");
+        }
         String topContinent = scanner.nextLine();
-        System.out.print("Enter N for TOP N cities in continent '" + topContinent + "': ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "Enter N for TOP N cities in continent {0}:",
+                    topContinent);
+        }
         int nContinent = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("\n=== 7. Top " + nContinent + " cities in continent '" + topContinent + "' ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 7. Top {0} cities in continent {1} ===",
+                    new Object[]{nContinent, topContinent});
+        }
         FeatureReportTopNCitiesContinent.generateReport(con, topContinent, nContinent);
 
         // 8. Top N cities in a region
-        System.out.print("\nEnter Region for TOP N cities: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Region for TOP N cities: ");
+        }
         String topRegion = scanner.nextLine();
-        System.out.print("Enter N for TOP N cities in region '" + topRegion + "': ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "Enter N for TOP N cities in region {0}:",
+                    topRegion);
+        }
         int nRegion = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("\n=== 8. Top " + nRegion + " cities in region '" + topRegion + "' ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 8. Top {0} cities in region {1} ===",
+                    new Object[]{nRegion, topRegion});
+        }
         FeatureReportTopNCitiesRegion.generateReport(con, topRegion, nRegion);
 
         // 9. Top N cities in a country
-        System.out.print("\nEnter Country for TOP N cities: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter Country for TOP N cities: ");
+        }
         String topCountry = scanner.nextLine();
-        System.out.print("Enter N for TOP N cities in country '" + topCountry + "': ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "Enter N for TOP N cities in country {0}:",
+                    topCountry);
+        }
         int nCountry = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("\n=== 9. Top " + nCountry + " cities in country '" + topCountry + "' ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 9. Top {0} cities in country {1} ===",
+                    new Object[]{nCountry, topCountry});
+        }
         FeatureReportTopNCitiesCountry.generateReport(con, topCountry, nCountry);
 
         // 10. Top N cities in a district
-        System.out.print("\nEnter District for TOP N cities: ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("\nEnter District for TOP N cities: ");
+        }
         String topDistrict = scanner.nextLine();
-        System.out.print("Enter N for TOP N cities in district '" + topDistrict + "': ");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "Enter N for TOP N cities in district {0}:",
+                    topDistrict);
+        }
         int nDistrict = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("\n=== 10. Top " + nDistrict + " cities in district '" + topDistrict + "' ===");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(Level.INFO,
+                    "\n=== 10. Top {0} cities in district {1} ===",
+                    new Object[]{nDistrict, topDistrict});
+        }
         FeatureReportTopNCitiesDistrict.generateReport(con, topDistrict, nDistrict);
     }
 
+
     private void runCityReportsNonInteractive() {
-        System.out.println("\n===== CITY REPORTS (Non-interactive) =====");
+        LOGGER.info("\n===== CITY REPORTS (Non-interactive) =====");
         // Simple world-level report for CI
         FeatureReportAllCitiesByPopulation.generateReport(con);
     }
 
-//     ----------------------------------------------------------
-//      BASIC POPULATION REPORTS
-//     ----------------------------------------------------------
+    // ----------------------------------------------------------
+    //  BASIC POPULATION REPORTS
+    // ----------------------------------------------------------
 
     private void runBasicPopulationReportsInteractive(Scanner scanner) {
-        System.out.println("\n===== BASIC POPULATION REPORTS =====");
+        LOGGER.info("\n===== BASIC POPULATION REPORTS =====");
 
         // 1. World population (no input required)
-        System.out.println("\n===== 1. Population of the WORLD =====");
+        LOGGER.info("\n===== 1. Population of the WORLD =====");
         BasicReportWorldPopulation.generateReport(con);
 
         // 2. Continent population
-        System.out.print("\nEnter Continent name: ");
+        LOGGER.info("\nEnter Continent name: ");
         String continent = scanner.nextLine().trim();
-        System.out.println("\n===== 2. Population of continent '" + continent + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 2. Population of continent {0} =====",
+                continent);
         BasicReportPopulationOfContinent.generateReport(con, continent);
 
         // 3. Region population
-        System.out.print("\nEnter Region name: ");
+        LOGGER.info("\nEnter Region name: ");
         String region = scanner.nextLine().trim();
-        System.out.println("\n===== 3. Population of region '" + region + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 3. Population of region {0} =====",
+                region);
         BasicReportPopulationOfRegion.generateReport(con, region);
 
         // 4. Country population
-        System.out.print("\nEnter Country name: ");
+        LOGGER.info("\nEnter Country name: ");
         String country = scanner.nextLine().trim();
-        System.out.println("\n===== 4. Population of country '" + country + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 4. Population of country {0} =====",
+                country);
         BasicReportPopulationOfCountry.generateReport(con, country);
 
         // 5. District population
-        System.out.print("\nEnter District name: ");
+        LOGGER.info("\nEnter District name: ");
         String district = scanner.nextLine().trim();
-        System.out.println("\n===== 5. Population of district '" + district + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 5. Population of district {0} =====",
+                district);
         BasicReportPopulationOfDistrict.generateReport(con, district);
 
         // 6. City population
-        System.out.print("\nEnter City name: ");
+        LOGGER.info("\nEnter City name: ");
         String city = scanner.nextLine().trim();
-        System.out.println("\n===== 6. Population of city '" + city + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 6. Population of city {0} =====",
+                city);
         BasicReportPopulationOfCity.generateReport(con, city);
 
         // 7. Language populations (fixed set)
-        System.out.println("\n===== 7. Population by Selected Languages =====");
+        LOGGER.info("\n===== 7. Population by Selected Languages =====");
         BasicReportLanguagePopulation.generateReport(con);
     }
 
     private void runBasicPopulationReportsNonInteractive() {
-        System.out.println("\n===== BASIC POPULATION REPORTS (Non-interactive) =====");
+        LOGGER.info("\n===== BASIC POPULATION REPORTS (Non-interactive) =====");
 
         // You can change these defaults to any valid values in your world database
         String continent = "Asia";
@@ -439,52 +546,61 @@ public class App {
         String city = "Yangon";
 
         // 1. World
-        System.out.println("\n===== 1. Population of the WORLD =====");
+        LOGGER.info("\n===== 1. Population of the WORLD =====");
         BasicReportWorldPopulation.generateReport(con);
 
         // 2. Continent
-        System.out.println("\n===== 2. Population of continent '" + continent + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 2. Population of continent {0} =====",
+                continent);
         BasicReportPopulationOfContinent.generateReport(con, continent);
 
         // 3. Region
-        System.out.println("\n===== 3. Population of region '" + region + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 3. Population of region {0} =====",
+                region);
         BasicReportPopulationOfRegion.generateReport(con, region);
 
         // 4. Country
-        System.out.println("\n===== 4. Population of country '" + country + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 4. Population of country {0} =====",
+                country);
         BasicReportPopulationOfCountry.generateReport(con, country);
 
         // 5. District
-        System.out.println("\n===== 5. Population of district '" + district + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 5. Population of district {0} =====",
+                district);
         BasicReportPopulationOfDistrict.generateReport(con, district);
 
         // 6. City
-        System.out.println("\n===== 6. Population of city '" + city + "' =====");
+        LOGGER.log(Level.INFO,
+                "\n===== 6. Population of city {0} =====",
+                city);
         BasicReportPopulationOfCity.generateReport(con, city);
 
         // 7. Languages
-        System.out.println("\n===== 7. Population by Selected Languages =====");
+        LOGGER.info("\n===== 7. Population by Selected Languages =====");
         BasicReportLanguagePopulation.generateReport(con);
     }
-
 
     // ----------------------------------------------------------
     //  POLICYMAKER REPORTS
     // ----------------------------------------------------------
 
     private void runPolicyMakerReports() {
-        System.out.println("\n===== POLICYMAKER POPULATION REPORTS =====");
+        LOGGER.info("\n===== POLICYMAKER POPULATION REPORTS =====");
 
-        System.out.println("\n===== 1. Population of each Continent =====");
+        LOGGER.info("\n===== 1. Population of each Continent =====");
         ReportPopulationByContinent.generateReport(con);
 
-        System.out.println("\n===== 2. Population of each Region =====");
+        LOGGER.info("\n===== 2. Population of each Region =====");
         ReportPopulationByRegion.generateReport(con);
 
-        System.out.println("\n===== 3. Population of each Country =====");
+        LOGGER.info("\n===== 3. Population of each Country =====");
         ReportPopulationByCountry.generateReport(con);
 
-        System.out.println("\nAll world population reports for policymakers have been generated.");
+        LOGGER.info("\nAll world population reports for policymakers have been generated.");
     }
 
     private void runPolicyMakerReportsNonInteractive() {
@@ -529,15 +645,15 @@ public class App {
     private int askForPositiveInt(Scanner scanner, String prompt) {
         int value = -1;
         while (value <= 0) {
-            System.out.print(prompt);
+            LOGGER.info(prompt);
             while (!scanner.hasNextInt()) {
-                System.out.print("Please enter a valid number: ");
+                LOGGER.warning("Please enter a valid number: ");
                 scanner.next(); // discard invalid token
             }
             value = scanner.nextInt();
             scanner.nextLine(); // consume newline
             if (value <= 0) {
-                System.out.println("N must be a positive integer.");
+                LOGGER.warning("N must be a positive integer.");
             }
         }
         return value;
@@ -570,7 +686,7 @@ public class App {
         try {
             // Non-interactive mode (Docker/CI) – no console attached
             if (System.console() == null && args.length >= 2) {
-                System.out.println("Running in non-interactive mode (Docker/CI)...");
+                LOGGER.info("Running in non-interactive mode (Docker/CI)...");
                 app.runAllReportsNonInteractive();
             } else {
                 // Interactive mode
@@ -579,10 +695,9 @@ public class App {
                 scanner.close();
             }
         } catch (Exception e) {
-            System.out.println("Error running application: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Error running application", e);
         } finally {
             app.disconnect();
         }
     }
 }
-

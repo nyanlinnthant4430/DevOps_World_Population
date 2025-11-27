@@ -5,9 +5,16 @@ import de.vandermeer.asciitable.AsciiTable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportPopulationOfDistrict {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportPopulationOfDistrict.class.getName());
+
     public static void generateReport(Connection con, String district) {
+
         String sql = """
                 SELECT District, SUM(Population) AS Population
                 FROM city
@@ -30,14 +37,20 @@ public class BasicReportPopulationOfDistrict {
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            } else {
+            }
+            else {
                 table.addRow(district, "No data");
             }
 
             table.addRule();
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating district population report: " + e.getMessage());
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info(table.render());
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating district population report", e);
         }
     }
 }

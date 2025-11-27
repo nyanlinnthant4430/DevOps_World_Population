@@ -1,11 +1,17 @@
 package com.napier.devops.FeatureCity_report;
 
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FeatureReportTopNCitiesRegion {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(FeatureReportTopNCitiesRegion.class.getName());
 
     public static void generateReport(Connection con, String region, int n) {
         try {
@@ -20,10 +26,9 @@ public class FeatureReportTopNCitiesRegion {
                     WHERE country.Region = ?
                     ORDER BY city.Population DESC
                     LIMIT ?;
-            """);
+                    """);
             pstmt.setString(1, region);
             pstmt.setInt(2, n);
-
             ResultSet rset = pstmt.executeQuery();
 
             LinkedList<FeatureCity> cities = new LinkedList<>();
@@ -42,15 +47,29 @@ public class FeatureReportTopNCitiesRegion {
             table.addRule();
 
             for (FeatureCity c : cities) {
-                table.addRow(c.name, c.country, c.district, String.format("%,d", c.population));
+                table.addRow(
+                        c.name,
+                        c.country,
+                        c.district,
+                        String.format("%,d", c.population)
+                );
                 table.addRule();
             }
 
-            System.out.println("Top " + n + " Cities in Region: " + region);
-            System.out.println(table.render());
+            table.setTextAlignment(TextAlignment.CENTER);
 
-        } catch (Exception e) {
-            System.out.println("Error generating Top N region city report: " + e.getMessage());
+            String header = String.format(
+                    "\n--- Top %d Cities in Region: %s ---",
+                    n, region
+            );
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating Top N cities in region report", e);
         }
     }
 }

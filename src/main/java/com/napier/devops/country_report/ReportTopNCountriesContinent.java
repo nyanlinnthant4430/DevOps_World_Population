@@ -5,14 +5,19 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Generates a report displaying the top N most populated countries
  * in a given continent with columns:
  * Code, Name, Continent, Region, Population, Capital
  */
-public class ReportTopNCountriesContinent
-{
+public class ReportTopNCountriesContinent {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ReportTopNCountriesContinent.class.getName());
+
     /**
      * Generates and displays a report of the top N countries in a specified continent
      * sorted by population in descending order.
@@ -21,10 +26,8 @@ public class ReportTopNCountriesContinent
      * @param continent the continent to filter by
      * @param n         the number of countries to display
      */
-    public static void generateReport(Connection con, String continent, int n)
-    {
-        try
-        {
+    public static void generateReport(Connection con, String continent, int n) {
+        try {
             PreparedStatement pstmt = con.prepareStatement("""
                     SELECT
                         country.Code,
@@ -37,7 +40,7 @@ public class ReportTopNCountriesContinent
                     LEFT JOIN city ON country.Capital = city.ID
                     WHERE country.Continent = ?
                     ORDER BY country.Population DESC
-                    LIMIT ?;
+                    LIMIT ?
                     """);
             pstmt.setString(1, continent);
             pstmt.setInt(2, n);
@@ -46,8 +49,7 @@ public class ReportTopNCountriesContinent
 
             LinkedList<Country> countries = new LinkedList<>();
 
-            while (rset.next())
-            {
+            while (rset.next()) {
                 countries.add(new Country(
                         rset.getString("Code"),
                         rset.getString("Name"),
@@ -63,8 +65,7 @@ public class ReportTopNCountriesContinent
             table.addRow("Code", "Name", "Continent", "Region", "Population", "Capital");
             table.addRule();
 
-            for (Country c : countries)
-            {
+            for (Country c : countries) {
                 table.addRow(
                         c.getCode(),
                         c.getName(),
@@ -78,12 +79,17 @@ public class ReportTopNCountriesContinent
 
             table.setTextAlignment(TextAlignment.CENTER);
 
-            System.out.println("\n--- Top " + n + " Countries in " + continent + " ---");
-            System.out.println(table.render());
+            // Build header string separately to avoid GuardLogStatement warning
+            String header = String.format(
+                    "\n--- Top %d Countries in %s ---", n, continent);
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
         }
-        catch (Exception e)
-        {
-            System.out.println("Error generating TopNCountriesContinent report: " + e.getMessage());
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating TopNCountriesContinent report", e);
         }
     }
 }

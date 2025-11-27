@@ -5,12 +5,17 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Generates a report displaying all countries in the world organized by population.
  * The report retrieves data from the database and displays it in descending order of population.
  */
 public class ReportAllCountriesByPopulation {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ReportAllCountriesByPopulation.class.getName());
 
     /**
      * Generates and displays a report of all countries sorted by population in descending order.
@@ -20,10 +25,8 @@ public class ReportAllCountriesByPopulation {
      */
     public static void generateReport(Connection con) {
         try {
-            // Create a statement object for executing SQL queries
             Statement stmt = con.createStatement();
 
-            // Correct query: join to city to get capital name
             ResultSet rset = stmt.executeQuery(
                     "SELECT country.Code, " +
                             "country.Name, " +
@@ -36,27 +39,15 @@ public class ReportAllCountriesByPopulation {
                             "ORDER BY country.Population DESC;"
             );
 
-            // Create a list to store Country objects
             LinkedList<Country> countries = new LinkedList<>();
-
-            // Iterate through result set and create Country objects
-//            while (rset.next()) {
-//                countries.add(new Country(
-//                        rset.getString("Code"),
-//                        rset.getString("Name"),
-//                        rset.getString("Continent"),
-//                        rset.getString("Region"),
-//                        rset.getInt("Population"),
-//                        rset.getString("Capital")
-//                ));
-//            }
 
             while (rset.next()) {
                 String capital = rset.getString("Capital");
-                if (capital == null || capital.isBlank())
+                if (capital == null || capital.isBlank()) {
                     capital = "N/A";
-                else
+                } else {
                     capital = capital.replace("\n", " ");
+                }
 
                 countries.add(new Country(
                         rset.getString("Code"),
@@ -68,17 +59,11 @@ public class ReportAllCountriesByPopulation {
                 ));
             }
 
-            // Create ASCII table for formatted output
             AsciiTable table = new AsciiTable();
-
-            // Add top border
             table.addRule();
-
-            // Add header row with column names
             table.addRow("Code", "Name", "Continent", "Region", "Population", "Capital");
             table.addRule();
 
-            // Add each country as a row in the table
             for (Country c : countries) {
                 table.addRow(
                         c.getCode(),
@@ -91,15 +76,14 @@ public class ReportAllCountriesByPopulation {
                 table.addRule();
             }
 
-            // Set text alignment to center for all cells
             table.setTextAlignment(TextAlignment.CENTER);
 
-            // Display the report title and rendered table
-            System.out.println("\n--- All Countries in the World by Population ---");
-            System.out.println(table.render());
+            LOGGER.info("\n--- All Countries in the World by Population ---");
+            String output = table.render();
+            LOGGER.info(output);
         } catch (Exception e) {
-            // Print error message if query or table generation fails
-            System.out.println("Error: " + e.getMessage());
+            LOGGER.log(Level.SEVERE,
+                    "Error generating AllCountriesByPopulation report", e);
         }
     }
 }

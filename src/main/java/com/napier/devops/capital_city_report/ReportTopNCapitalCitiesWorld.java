@@ -1,10 +1,27 @@
 package com.napier.devops.capital_city_report;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
-import de.vandermeer.asciitable.AsciiTable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+/**
+ * Report 10:
+ * The top N populated capital cities in the world where N is provided by the user.
+ * Columns:
+ *  - Name
+ *  - Country
+ *  - Population
+ */
 public class ReportTopNCapitalCitiesWorld {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ReportTopNCapitalCitiesWorld.class.getName());
 
     public static void generateReport(Connection con, int n) {
         try {
@@ -14,22 +31,23 @@ public class ReportTopNCapitalCitiesWorld {
                         country.Name   AS Country,
                         city.Population AS Population
                     FROM city
-                    INNER JOIN country ON city.ID = country.Capital
+                    JOIN country ON city.ID = country.Capital
                     ORDER BY city.Population DESC
                     LIMIT ?;
                     """;
 
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, n);
-            ResultSet rset = stmt.executeQuery();
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, n);
+            ResultSet rset = pstmt.executeQuery();
 
-            LinkedList<City> cities = new LinkedList<>();
+            LinkedList<City> capitals = new LinkedList<>();
+
             while (rset.next()) {
                 City c = new City();
                 c.setName(rset.getString("Name"));
                 c.setCountry(rset.getString("Country"));
                 c.setPopulation(rset.getInt("Population"));
-                cities.add(c);
+                capitals.add(c);
             }
 
             AsciiTable table = new AsciiTable();
@@ -37,19 +55,27 @@ public class ReportTopNCapitalCitiesWorld {
             table.addRow("Name", "Country", "Population");
             table.addRule();
 
-            for (City c : cities) {
+            for (City c : capitals) {
                 table.addRow(
                         c.getName(),
-                        c.getCountry(),
-                         String.format("%,d", c.getPopulation())
+                        c.getCountryName(),
+                        String.format("%,d", c.getPopulation())
                 );
                 table.addRule();
             }
 
-            System.out.println("Top " + n + " Most Populated Capital Cities in the World:");
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating report: " + e.getMessage());
+            table.setTextAlignment(TextAlignment.CENTER);
+
+            String header = String.format(
+                    "\n--- Top %d Capital Cities in the World ---", n);
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating TopNCapitalCitiesWorld report", e);
         }
     }
 }
