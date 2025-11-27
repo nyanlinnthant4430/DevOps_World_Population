@@ -1,11 +1,17 @@
 package com.napier.devops.FeatureCity_report;
 
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FeatureReportCitiesByDistrict {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(FeatureReportCitiesByDistrict.class.getName());
 
     public static void generateReport(Connection con, String district) {
         try {
@@ -19,9 +25,8 @@ public class FeatureReportCitiesByDistrict {
                     JOIN country ON city.CountryCode = country.Code
                     WHERE city.District = ?
                     ORDER BY city.Population DESC;
-            """);
+                    """);
             pstmt.setString(1, district);
-
             ResultSet rset = pstmt.executeQuery();
 
             LinkedList<FeatureCity> cities = new LinkedList<>();
@@ -40,15 +45,29 @@ public class FeatureReportCitiesByDistrict {
             table.addRule();
 
             for (FeatureCity c : cities) {
-                table.addRow(c.name, c.country, c.district, String.format("%,d", c.population));
+                table.addRow(
+                        c.name,
+                        c.country,
+                        c.district,
+                        String.format("%,d", c.population)
+                );
                 table.addRule();
             }
 
-            System.out.println("Cities in District: " + district);
-            System.out.println(table.render());
+            table.setTextAlignment(TextAlignment.CENTER);
 
-        } catch (Exception e) {
-            System.out.println("Error generating district city report: " + e.getMessage());
+            String header = String.format(
+                    "\n--- Cities in District: %s (by Population) ---",
+                    district
+            );
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating district city report", e);
         }
     }
 }

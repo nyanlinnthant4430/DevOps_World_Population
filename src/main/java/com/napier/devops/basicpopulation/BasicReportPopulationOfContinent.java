@@ -5,9 +5,16 @@ import de.vandermeer.asciitable.AsciiTable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportPopulationOfContinent {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportPopulationOfContinent.class.getName());
+
     public static void generateReport(Connection con, String continent) {
+
         String sql = """
                 SELECT Continent, SUM(Population) AS Population
                 FROM country
@@ -30,14 +37,20 @@ public class BasicReportPopulationOfContinent {
                 p.setTotalPopulation(rset.getLong("Population"));
 
                 table.addRow(p.getName(), p.getTotalPopulation());
-            } else {
+            }
+            else {
                 table.addRow(continent, "No data");
             }
 
             table.addRule();
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating continent population report: " + e.getMessage());
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info(table.render());
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating continent population report", e);
         }
     }
 }

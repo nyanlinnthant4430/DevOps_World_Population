@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 import java.util.Scanner;
 
+import static com.napier.devops.App.LOGGER;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,10 +52,11 @@ public class AppIntegrationTest {
                 assertTrue(con.isClosed(), "Connection should be closed after disconnect()");
             }
         } catch (SQLException e) {
-            // If we cannot check, do not fail the whole suite – just log
-            System.out.println("Error verifying closed connection in tearDown: " + e.getMessage());
+            String msg = "Error verifying closed connection in tearDown: " + e.getMessage();
+            LOGGER.warning(msg);
         }
     }
+
 
     @Test
     void testRunAllReportsNonInteractiveViaReflection() throws Exception {
@@ -189,12 +191,15 @@ public class AppIntegrationTest {
         try {
             Connection localCon = localApp.getConnection();
             if (localCon != null) {
-                assertTrue(localCon.isClosed(), "Connection should be closed after disconnect() on localApp");
+                assertTrue(localCon.isClosed(),
+                        "Connection should be closed after disconnect() on localApp");
             }
         } catch (SQLException e) {
-            System.out.println("Error verifying closed connection in testConnectNoArgConvenienceMethod: " + e.getMessage());
+            String msg = "Error verifying closed connection in testConnectNoArgConvenienceMethod: " + e.getMessage();
+            LOGGER.warning(msg);
         }
     }
+
 
     @Test
     @DisplayName("ReportContinent.generateReport executes without error")

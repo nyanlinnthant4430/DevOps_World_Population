@@ -5,6 +5,8 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Generates a report displaying all countries in a continent
@@ -12,8 +14,11 @@ import java.util.LinkedList;
  * Code, Name, Continent, Region, Population, Capital
  * ordered by population (descending).
  */
-public class ReportCountriesByContinent
-{
+public class ReportCountriesByContinent {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ReportCountriesByContinent.class.getName());
+
     /**
      * Generates and displays a report of countries in a specified continent
      * sorted by population in descending order.
@@ -21,10 +26,8 @@ public class ReportCountriesByContinent
      * @param con       the database connection
      * @param continent the continent to filter by
      */
-    public static void generateReport(Connection con, String continent)
-    {
-        try
-        {
+    public static void generateReport(Connection con, String continent) {
+        try {
             PreparedStatement pstmt = con.prepareStatement("""
                     SELECT
                         country.Code,
@@ -44,8 +47,7 @@ public class ReportCountriesByContinent
 
             LinkedList<Country> countries = new LinkedList<>();
 
-            while (rset.next())
-            {
+            while (rset.next()) {
                 countries.add(new Country(
                         rset.getString("Code"),
                         rset.getString("Name"),
@@ -61,8 +63,7 @@ public class ReportCountriesByContinent
             table.addRow("Code", "Name", "Continent", "Region", "Population", "Capital");
             table.addRule();
 
-            for (Country c : countries)
-            {
+            for (Country c : countries) {
                 table.addRow(
                         c.getCode(),
                         c.getName(),
@@ -76,12 +77,13 @@ public class ReportCountriesByContinent
 
             table.setTextAlignment(TextAlignment.CENTER);
 
-            System.out.println("\n--- Countries in " + continent + " by Population ---");
-            System.out.println(table.render());
-        }
-        catch (Exception e)
-        {
-            System.out.println("Error generating CountriesByContinent report: " + e.getMessage());
+            LOGGER.log(Level.INFO,
+                    "\n--- Countries in {0} by Population ---", continent);
+            String output = table.render();
+            LOGGER.info(output);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating CountriesByContinent report", e);
         }
     }
 }

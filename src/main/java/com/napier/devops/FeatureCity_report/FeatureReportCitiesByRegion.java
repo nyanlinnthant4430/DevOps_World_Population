@@ -1,11 +1,17 @@
 package com.napier.devops.FeatureCity_report;
 
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FeatureReportCitiesByRegion {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(FeatureReportCitiesByRegion.class.getName());
 
     public static void generateReport(Connection con, String region) {
         try {
@@ -19,9 +25,8 @@ public class FeatureReportCitiesByRegion {
                     JOIN country ON city.CountryCode = country.Code
                     WHERE country.Region = ?
                     ORDER BY city.Population DESC;
-            """);
+                    """);
             pstmt.setString(1, region);
-
             ResultSet rset = pstmt.executeQuery();
 
             LinkedList<FeatureCity> cities = new LinkedList<>();
@@ -40,15 +45,29 @@ public class FeatureReportCitiesByRegion {
             table.addRule();
 
             for (FeatureCity c : cities) {
-                table.addRow(c.name, c.country, c.district, String.format("%,d", c.population));
+                table.addRow(
+                        c.name,
+                        c.country,
+                        c.district,
+                        String.format("%,d", c.population)
+                );
                 table.addRule();
             }
 
-            System.out.println("Cities by Region: " + region);
-            System.out.println(table.render());
+            table.setTextAlignment(TextAlignment.CENTER);
 
-        } catch (Exception e) {
-            System.out.println("Error generating region city report: " + e.getMessage());
+            String header = String.format(
+                    "\n--- Cities in Region: %s (by Population) ---",
+                    region
+            );
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating cities by region report", e);
         }
     }
 }

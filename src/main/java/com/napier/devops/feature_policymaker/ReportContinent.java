@@ -2,19 +2,24 @@ package com.napier.devops.feature_policymaker;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Generates and displays population reports grouped by continent.
+ * Report: Population by Continent
  */
 public class ReportContinent {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ReportContinent.class.getName());
 
     public void generateReport(Connection con) {
         try {
             Statement stmt = con.createStatement();
 
-            // FIX: Fully qualify Population columns with table names (country.Population, city.Population)
             ResultSet rs = stmt.executeQuery("""
                 SELECT country.Continent AS Name,
                        SUM(country.Population) AS TotalPopulation,
@@ -27,6 +32,7 @@ public class ReportContinent {
             """);
 
             LinkedList<PopulationRecord> records = new LinkedList<>();
+
             while (rs.next()) {
                 records.add(new PopulationRecord(
                         rs.getString("Name"),
@@ -36,22 +42,31 @@ public class ReportContinent {
                 ));
             }
 
-            // Display table
             AsciiTable table = new AsciiTable();
             table.addRule();
             table.addRow("Continent", "Total Population", "City Population", "Non-City Population");
             table.addRule();
 
             for (PopulationRecord r : records) {
-                table.addRow(r.getName(), r.getTotalPopulation(), r.getCityPopulation(), r.getNonCityPopulation());
+                table.addRow(
+                        r.name(),
+                        String.format("%,d", r.totalPopulation()),
+                        String.format("%,d", r.cityPopulation()),
+                        String.format("%,d", r.nonCityPopulation())
+                );
                 table.addRule();
             }
 
             table.setTextAlignment(TextAlignment.CENTER);
-            System.out.println("\n Population by Continent");
-            System.out.println(table.render());
-        } catch (SQLException e) {
-            System.out.println("Error generating continent report: " + e.getMessage());
+
+            String header = "\n--- Population by Continent ---";
+            LOGGER.info(header);
+
+            String output = table.render();
+            LOGGER.info(output);
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error generating continent population report", e);
         }
     }
 }

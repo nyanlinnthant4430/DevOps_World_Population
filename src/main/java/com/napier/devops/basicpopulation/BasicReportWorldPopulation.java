@@ -5,11 +5,19 @@ import de.vandermeer.asciitable.AsciiTable;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportWorldPopulation {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportWorldPopulation.class.getName());
+
     public static void generateReport(Connection con) {
         try (Statement stmt = con.createStatement();
-             ResultSet rset = stmt.executeQuery("SELECT SUM(Population) AS Population FROM country")) {
+             ResultSet rset = stmt.executeQuery(
+                     "SELECT SUM(Population) AS Population FROM country")) {
+
             Population p = new Population();
 
             if (rset.next()) {
@@ -24,9 +32,13 @@ public class BasicReportWorldPopulation {
             table.addRow(p.getTotalPopulation());
             table.addRule();
 
-            System.out.println(table.render());
-        } catch (Exception e) {
-            System.out.println("Error generating world population report: " + e.getMessage());
+            // Avoid GuardLogStatement: build string separately
+            String output = table.render();
+            LOGGER.info(output);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating world population report", e);
         }
     }
 }

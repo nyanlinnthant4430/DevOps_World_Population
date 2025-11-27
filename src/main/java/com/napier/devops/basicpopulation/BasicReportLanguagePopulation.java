@@ -6,11 +6,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicReportLanguagePopulation {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(BasicReportLanguagePopulation.class.getName());
+
     public static void generateReport(Connection con) {
         if (con == null) {
-            System.out.println("No database connection.");
+            LOGGER.warning("No database connection.");
             return;
         }
 
@@ -19,14 +25,16 @@ public class BasicReportLanguagePopulation {
 
             // Get world population
             try (Statement stmt = con.createStatement();
-                 ResultSet rset = stmt.executeQuery("SELECT SUM(Population) AS Population FROM country")) {
+                 ResultSet rset = stmt.executeQuery(
+                         "SELECT SUM(Population) AS Population FROM country")) {
+
                 if (rset.next()) {
                     worldPopulation = rset.getLong("Population");
                 }
             }
 
             if (worldPopulation == 0) {
-                System.out.println("World population could not be calculated.");
+                LOGGER.warning("World population could not be calculated.");
                 return;
             }
 
@@ -43,6 +51,7 @@ public class BasicReportLanguagePopulation {
 
             try (PreparedStatement stmt = con.prepareStatement(sql);
                  ResultSet rset = stmt.executeQuery()) {
+
                 AsciiTable table = new AsciiTable();
                 table.addRule();
                 table.addRow("Language", "Speakers", "% of World Population");
@@ -65,10 +74,14 @@ public class BasicReportLanguagePopulation {
                     table.addRule();
                 }
 
-                System.out.println(table.render());
+                if (LOGGER.isLoggable(Level.INFO)) {
+                    LOGGER.info(table.render());
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Error generating language population report: " + e.getMessage());
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "Error generating language population report", e);
         }
     }
 }
